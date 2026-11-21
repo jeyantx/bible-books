@@ -326,6 +326,11 @@
   function renderContinue() {
     var box = document.getElementById('continue'), last = stored('last');
     if (!box || !last) return;
+    if (box.classList.contains('inline')) {   // inside a book: one quiet line, only for this book's chapters
+      var dir = location.pathname.replace(/^.*\/books\//, 'books/').replace(/[^/]*$/, '');
+      if (last.u.indexOf(dir) !== 0) return;
+      box.innerHTML = '<a class="continue-line" href="' + BASE + last.u + '">' + icon('book') + '<span>தொடர்ந்து படிக்க: <b>' + esc(last.t.replace(/^\S+\s/, 'அதிகாரம் ')) + '</b> · ' + esc(last.l) + '</span>' + icon('chevr') + '</a>';
+    } else
     box.innerHTML = '<a class="continue-card" href="' + BASE + last.u + '"><span class="eyebrow">தொடர்ந்து படிக்க</span><b>' + esc(last.t) + '</b><span>' + esc(last.l) + '</span></a>';
     box.hidden = false;
   }

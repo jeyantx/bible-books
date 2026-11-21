@@ -445,3 +445,8 @@ details.sec[open]>summary{border-bottom:1px solid var(--line)}
 .iv-cap a{color:#9fd0e3}
 .iv-cap .src{background:rgba(255,255,255,.1);border-color:transparent;color:#d6d9dd}
 @media(min-width:861px){.iv-stage{padding:24px}.iv-cap{max-height:none;text-align:center}.iv-cap::after{display:none}}
+
+.continue-line{display:inline-flex;align-items:center;gap:8px;font-size:13.5px;color:var(--muted);text-decoration:none;margin:-4px 0 6px}
+.continue-line b{color:var(--accent);font-weight:600}
+.continue-line .i{color:var(--accent)}
+.continue-line:hover span{text-decoration:underline}
