@@ -498,3 +498,11 @@ details.sec[open]>summary{border-bottom:1px solid var(--line)}
   .pop-head{position:relative;padding-top:18px}
   .pop-head::before{content:"";position:absolute;top:7px;left:50%;transform:translateX(-50%);width:40px;height:4px;border-radius:4px;background:var(--line)}
 }
+
+/* menu: actions above the reading settings */
+.rp-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--line)}
+.rp-act{display:flex;align-items:center;justify-content:center;gap:8px;padding:9px 10px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--text);font:600 13px var(--sans);text-decoration:none;cursor:pointer}
+.rp-act .i{color:var(--accent)}
+.rp-act.spin .i{animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+#reader-btn{padding:6px 9px}

@@ -39,6 +39,9 @@
     quote: '<path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1z"/><path d="M15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2h.75c0 2.25.25 4-2.75 4v3c0 1 0 1 1 1z"/>',
     alert: '<path d="m21.7 18-8-14a2 2 0 0 0-3.4 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.7-3"/><path d="M12 9v4M12 17h.01"/>',
     heart: '<path d="M19 14c1.5-1.5 3-3.2 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.8 0-3 .5-4.5 2-1.5-1.5-2.7-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4 3 5.5l7 7z"/>',
+    menu: '<path d="M4 6h16M4 12h16M4 18h16"/>',
+    reload: '<path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/>',
+    home: '<path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/>',
     search: '<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>',
     play: '<path d="M6 4v16l14-8z"/>',
     headphones: '<path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/>',
@@ -251,6 +254,8 @@
         opts.map(function (o) { return '<button data-val="' + o[0] + '"' + (o[2] ? ' class="' + o[2] + '"' : '') + '>' + o[1] + '</button>'; }).join('') + '</div></div>';
     }
     panel.innerHTML =
+      '<div class="rp-actions"><button class="rp-act" data-act="reload">' + icon('reload') + '<span>பக்கத்தைப் புதுப்பி</span></button>' +
+      '<a class="rp-act" href="' + BASE + '">' + icon('home') + '<span>முகப்பு</span></a></div>' +
       group('எழுத்து அளவு', 'size', [['1', 'அ', 'fs1'], ['2', 'அ', 'fs2'], ['3', 'அ', 'fs3'], ['4', 'அ', 'fs4']]) +
       group('எழுத்துரு', 'font', [['sans', 'Sans'], ['serif', 'Serif', 'serif']]) +
       group('வரி இடைவெளி', 'spacing', [['normal', 'சாதாரண'], ['relaxed', 'அகலமாக']]) +
@@ -264,7 +269,9 @@
       });
     }
     panel.addEventListener('click', function (e) {
-      var b = e.target.closest('button'); if (!b) return;
+      var act = e.target.closest('[data-act="reload"]');
+      if (act) { act.classList.add('spin'); location.reload(); return; }
+      var b = e.target.closest('.seg button'); if (!b) return;
       PREFS[b.parentNode.dataset.key] = b.dataset.val; apply(); save(); sync();
       if (b.parentNode.dataset.key === 'en') document.dispatchEvent(new Event('en-change'));
     });

@@ -26,7 +26,7 @@ Collected from the owner's feedback while building Galatians. If something here 
 
 ## Layout & UI
 - **App-like two-pane**, not one long page: left = full chapter verses (Tamil NWT, grouped by the chapter parts); right = one tab at a time. Tap a verse → its note opens; opening a note highlights its verses. Scroll offsets must leave the note/verse just below the sticky header (don't hide it).
-- Text size ~15.5px, Sans (Noto Sans Tamil) everywhere incl. popups — serif Tamil looked heavy. Reader settings (Aa): size, font, spacing, theme (auto/light/sepia/dark in a 2×2 grid), English verses on/off.
+- Text size ~15.5px, Sans (Noto Sans Tamil) everywhere incl. popups — serif Tamil looked heavy. Menu (☰, top right): "பக்கத்தைப் புதுப்பி" (reload — installed apps have no pull-to-refresh) and முகப்பு, then reading settings: size, font, spacing, theme (auto/light/sepia/dark in a 2×2 grid), English verses on/off.
 - **No repeated names** (e.g. "கலாத்தியர்" twice in bar and pane). Breadcrumb shortens with width (phone: "கலாத்தியர் › 2").
 - Icons: line icons (Lucide), **no emoji**.
 - Popups: verse popup = Tamil text (+ English if on) + "open in wol". Source chip popup = our Tamil summary + link. Images = full-screen viewer (zoom, pan, swipe down, ×), never a new tab.
