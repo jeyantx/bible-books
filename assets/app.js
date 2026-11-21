@@ -254,6 +254,21 @@
     document.addEventListener('click', function (e) { if (!panel.hidden && !panel.contains(e.target) && !btn.contains(e.target)) panel.hidden = true; });
   }
 
+  // installed app: when it comes back to the foreground, check whether a newer version was published
+  function checkUpdate() {
+    var meta = document.querySelector('meta[name="build"]'); if (!meta || document.querySelector('.update-bar')) return;
+    fetch(BASE + 'version.json?t=' + Date.now(), { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (v) {
+      if (!v.build || v.build === meta.content) return;
+      var bar = document.createElement('div'); bar.className = 'update-bar';
+      bar.innerHTML = '<span>புதிய பதிப்பு உள்ளது</span><button>புதுப்பி</button><button class="ghost" aria-label="மூடு">' + icon('x') + '</button>';
+      bar.querySelector('button').addEventListener('click', function () { location.reload(); });
+      bar.querySelector('.ghost').addEventListener('click', function () { bar.remove(); });
+      document.body.appendChild(bar);
+    }).catch(function () {});
+  }
+  document.addEventListener('visibilitychange', function () { if (!document.hidden) checkUpdate(); });
+  setTimeout(checkUpdate, 4000);
+
   if ('serviceWorker' in navigator) { try { navigator.serviceWorker.register(BASE + 'sw.js'); } catch (e) {} }
 
   document.addEventListener('DOMContentLoaded', function () {
@@ -363,6 +378,7 @@
     }
     function show(v, keepScroll) {
       body.classList.toggle('show-verses', v === 'verses');
+      document.dispatchEvent(new Event('view-change'));
       tabs.forEach(function (b) { b.classList.toggle('on', b.dataset.v === v); });
       if (v !== 'verses') {
         views.forEach(function (s) { s.classList.toggle('on', s.dataset.view === v); });
@@ -506,27 +522,23 @@
     }
     document.addEventListener('en-change', fillEnglish);
 
-    // phone: hide the top bar and chapter title while scrolling down; keep the tab row; show again on scroll up
+    // phone: the chapter title shrinks and fades continuously as the reader scrolls (verses or notes); the top bar always stays
     (function () {
-      var mq = window.matchMedia('(max-width:860px)'), head = document.querySelector('.chead');
-      function watch(el) {
-        var lastY = 0, acc = 0;
-        el.addEventListener('scroll', function () {
-          if (!mq.matches) { body.classList.remove('chrome-hidden'); return; }
-          var y = el.scrollTop, dy = y - lastY; lastY = y;
-          if (Date.now() < lock) { acc = 0; return; }             // ignore the jump caused by our own toggle
-          acc = (acc > 0) === (dy > 0) ? acc + dy : dy;           // distance in the current direction
-          var hide = body.classList.contains('chrome-hidden');
-          if (!hide && y > 120 && acc > 40) set(true);
-          else if (hide && (acc < -30 || y < 40)) set(false);
-        }, { passive: true });
+      var mq = window.matchMedia('(max-width:860px)'), h1 = document.querySelector('.chead h1'), full = 0;
+      if (!h1) return;
+      function measure() { h1.style.maxHeight = ''; h1.style.opacity = ''; full = h1.scrollHeight; }
+      function update(y) {
+        if (!mq.matches) { h1.style.maxHeight = ''; h1.style.opacity = ''; return; }
+        if (!full) measure();
+        var k = Math.min(1, Math.max(0, y / (full * 1.6)));         // gentle: needs ~1.6× its height of scrolling
+        h1.style.maxHeight = (full * (1 - k)) + 'px';
+        h1.style.opacity = String(1 - k);
+        h1.style.paddingTop = (12 * (1 - k)) + 'px';
       }
-      var lock = 0;
-      function set(on) {
-        lock = Date.now() + 350;
-        body.classList.toggle('chrome-hidden', on);   // only the top bar collapses (animated); the text does not move
-      }
-      watch(content); watch(document.querySelector('.verses'));
+      var pane = document.querySelector('.verses');
+      if (pane) pane.addEventListener('scroll', function () { if (body.classList.contains('show-verses')) update(pane.scrollTop); }, { passive: true });
+      document.addEventListener('view-change', function () { update(body.classList.contains('show-verses') ? (pane ? pane.scrollTop : 0) : 0); });
+      addEventListener('resize', function () { full = 0; update(0); });
     })();
 
     // chapter audio in the verse pane header

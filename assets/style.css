@@ -397,9 +397,6 @@ body.brief details.vs:not(.full) .more-btn{display:inline-block}
 
 /* phone: auto-hide top chrome while reading (tabs stay) */
 @media (max-width:860px){
-  .bar{transition:height .2s ease,border-color .2s;overflow:hidden}
-  body.chrome-hidden .bar{height:0;border-bottom-color:transparent}
-  body.chrome-hidden .reader-panel{display:none}
 }
 
 /* breadcrumb shortens with screen width */
@@ -471,3 +468,10 @@ details.sec[open]>summary{border-bottom:1px solid var(--line)}
   .pane-head{white-space:nowrap}
   .pane-head .ph-sub{display:none}
 }
+
+/* phone: title collapses with scroll (values set by app.js) */
+@media (max-width:860px){ .chead h1{overflow:hidden;will-change:max-height,opacity} }
+/* update-available bar */
+.update-bar{position:fixed;left:50%;bottom:max(16px,env(safe-area-inset-bottom));transform:translateX(-50%);z-index:90;display:flex;align-items:center;gap:10px;background:var(--text);color:var(--bg);padding:8px 8px 8px 16px;border-radius:999px;box-shadow:0 8px 30px rgba(0,0,0,.25);font-size:14px;white-space:nowrap}
+.update-bar button{border:0;border-radius:999px;padding:6px 14px;background:var(--accent);color:#fff;font:600 13px var(--sans);cursor:pointer}
+.update-bar button.ghost{background:transparent;color:var(--bg);padding:6px}

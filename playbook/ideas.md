@@ -13,10 +13,9 @@
 - jw.org Tamil audio Bible per chapter
 - Short / detailed switch in ஆய்வு
 - Update checker for new publications
-- Installable app (Android/iOS), auto-updating
+- Installable app (Android/iOS), auto-updating, with a "new version — refresh" bar
 
 ## Approved, not built yet
-- "Update available — tap to refresh" bar when an installed app returns to the foreground (offered; owner to confirm)
 - People across chapters: an ID card lists every chapter where the person appears and what they do there
 
 ## Declined (and why)
