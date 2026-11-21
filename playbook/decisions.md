@@ -47,7 +47,7 @@ Collected from the owner's feedback while building Galatians. If something here 
 - Border = role: light green good, red opposer, yellow neutral. No role label text on the ID card (border is enough).
 - ID card: picture, name, facts, short note, verse refs — simple with good spacing.
 - Grid labels short (full name in the ID card); text must wrap inside cards.
-- Pictures from jw.org (lfb lessons, nwtsty media gallery, appendix maps) saved locally in `assets/img/<book>/` with caption + source chip.
+- Pictures from jw.org (lfb lessons, nwtsty media gallery, appendix maps, Watchtower article art) saved locally in `assets/img/<book>/` with caption + source chip. Put each picture **both** in its verse note (ஆய்வு) **and** in the matching கதை part — the owner looks for pictures in the story.
 - Site icon: owner-provided book image, background cleaned to real transparency.
 
 ## Data that must not live only in the browser
