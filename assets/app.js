@@ -104,7 +104,7 @@
   }
 
   // ---------- popup ----------
-  var data = { verses: null, sources: null };
+  var data = { verses: null, sources: null, people: null };
   function getJSON(name) {
     return fetch(BASE + 'data/' + name).then(function (r) { return r.json(); }).catch(function () { return {}; });
   }
@@ -120,8 +120,10 @@
     pop.addEventListener('click', function (e) { if (e.target.closest('[data-close]')) close(); });
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape') close(); });
   }
-  function open(title, bodyHtml, url) {
-    popTitle.innerHTML = title; popBody.innerHTML = bodyHtml; popLink.href = url;
+  function open(title, bodyHtml, url, mode) {
+    pop.className = 'pop' + (mode ? ' ' + mode : '');
+    popTitle.innerHTML = title; popBody.innerHTML = bodyHtml;
+    popLink.parentNode.hidden = !url; if (url) popLink.href = url;
     pop.hidden = false; document.body.classList.add('noscroll');
     pop.querySelector('.pop-head button').focus({ preventScroll: true });
   }
@@ -151,6 +153,26 @@
         '<p class="pop-note">இது ஒரு சுருக்கம். முழுக் கட்டுரையை wol-ல் வாசிக்கவும்.</p>', s.url);
     };
     if (data.sources) render(); else getJSON('sources.json').then(function (d) { data.sources = d; render(); });
+  }
+
+  function showImage(img) {
+    var fig = img.closest('figure'), cap = fig && fig.querySelector('figcaption');
+    open(icon('image') + '<span>' + esc(img.alt || 'படம்') + '</span>',
+      '<img src="' + img.currentSrc + '" alt="' + esc(img.alt) + '">' + (cap ? '<div class="cap">' + cap.innerHTML + '</div>' : ''), '', 'viewer');
+  }
+  function showPerson(key) {
+    var render = function () {
+      var p = data.people[key]; if (!p) return;
+      var role = { good: 'உண்மையுள்ளவர்', bad: 'எதிர்த்தவர்', neutral: p.kind === 'place' ? 'இடம்' : 'நடுநிலை' }[p.role];
+      var facts = p.facts.map(function (f) { return '<dt>' + esc(f[0]) + '</dt><dd>' + esc(f[1]) + '</dd>'; }).join('');
+      var body = '<div class="idcard' + (p.kind === 'place' ? ' place' : '') + '" data-role="' + p.role + '">' +
+        '<img src="' + BASE + 'assets/icons/' + p.img + '" alt="' + esc(p.name) + '">' +
+        '<div><span class="role ' + p.role + '">' + role + '</span><h3>' + esc(p.name) + '</h3><dl>' + facts + '</dl>' +
+        '<p>' + esc(p.note) + '</p><p class="pop-note refs-line">' + esc(p.refs) + '</p></div></div>';
+      open(icon(p.kind === 'place' ? 'pin' : 'user') + '<span>' + (p.kind === 'place' ? 'இடம்' : 'நபர்') + '</span>', body, '');
+      linkRefs(popBody.querySelector('.refs-line'), +(document.body.dataset.book || 0));
+    };
+    if (data.people) render(); else getJSON('people.json').then(function (d) { data.people = d; render(); });
   }
 
   // ---------- reader panel ----------
@@ -194,6 +216,10 @@
     if (main && book) linkRefs(main, book);
     buildPopup();
     document.addEventListener('click', function (e) {
+      var av = e.target.closest('.avatar[data-person]');
+      if (av) { e.preventDefault(); showPerson(av.dataset.person); return; }
+      var im = e.target.closest('figure img, .st img');
+      if (im && !im.closest('.pop')) { e.preventDefault(); showImage(im); return; }
       var a = e.target.closest('a.ref, a.src[data-src]');
       if (!a || e.metaKey || e.ctrlKey || e.shiftKey) return;
       e.preventDefault();
@@ -249,7 +275,10 @@
       list.querySelectorAll('.verse').forEach(function (x) {
         var n = +x.dataset.v, on = n >= a && n <= b; x.classList.toggle('hl', on); if (on && !first) first = x;
       });
-      if (first && scrollPane) list.parentNode.scrollTo({ top: first.offsetTop - 60, behavior: 'smooth' });
+      if (first && scrollPane) {
+        var pane = list.parentNode, head = pane.querySelector('.pane-head');
+        pane.scrollTo({ top: first.getBoundingClientRect().top - pane.getBoundingClientRect().top + pane.scrollTop - (head ? head.offsetHeight : 0) - 12, behavior: 'smooth' });
+      }
     }
     function focusVerse(v) {
       var d = blocks.filter(function (b) { if (!b.dataset.r) return false; var r = b.dataset.r.split('-'); return v >= +r[0] && v <= +r[1]; })[0];
@@ -257,7 +286,10 @@
       blocks.forEach(function (b) { b.classList.remove('hl'); });
       if (d) {
         var r = d.dataset.r.split('-'); d.open = true; d.classList.add('hl'); highlight(+r[0], +r[1], false);
-        setTimeout(function () { d.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 30);
+        setTimeout(function () {
+          var head = document.querySelector('.chead'), sticky = getComputedStyle(head).position === 'sticky' ? head.offsetHeight : 0;
+          content.scrollTo({ top: d.getBoundingClientRect().top - content.getBoundingClientRect().top + content.scrollTop - sticky - 12, behavior: 'smooth' });
+        }, 30);
       } else highlight(v, v, false);
     }
     blocks.forEach(function (d) {

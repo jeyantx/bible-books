@@ -9,6 +9,10 @@ STYLE = ("Style: minimal engraved / woodcut style illustration, two tones only: 
          "line work and {accent} as the single accent colour for clothing or key areas, subtle hatching, "
          "classic Bible-study book-illustration feel, simple and dignified, not cartoonish, not colourful. "
          "No text, no halo, no frame, centered, plain solid white background.")
+PLACE_STYLE = ("Style: soft hand-painted watercolour over fine ink line work, natural muted colours (warm stone, "
+               "olive greens, sky blue, sand), gentle light, calm and clear, classic Bible-study book-illustration feel, "
+               "not cartoonish, not oversaturated. {accent} may appear as a subtle accent. Square composition filling the frame, "
+               "no text, no border, no white margin.")
 SUBJECT = {
     "person": "Bust portrait icon of {desc}. First-century Middle-Eastern setting, respectful and historically plausible clothing.",
     "place": "Small vignette icon of {desc}, as it may have looked in the first century C.E. Compact composition that reads well at small size.",
@@ -18,7 +22,7 @@ SUBJECT = {
 def main():
     out, kind, desc, accent = sys.argv[1:5]
     key = open(os.environ.get("OPENAI_KEY_FILE", os.path.expanduser("~/Downloads/openai-key.txt"))).read().strip()
-    prompt = SUBJECT[kind].format(desc=desc) + " " + STYLE.format(accent=accent)
+    prompt = SUBJECT[kind].format(desc=desc) + " " + (PLACE_STYLE if kind == "place" else STYLE).format(accent=accent)
     body = json.dumps({"model": "gpt-image-2", "prompt": prompt, "size": "1024x1024", "quality": "medium", "n": 1}).encode()
     req = urllib.request.Request("https://api.openai.com/v1/images/generations", data=body,
                                  headers={"Authorization": "Bearer " + key, "Content-Type": "application/json"})

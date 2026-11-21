@@ -1,4 +1,8 @@
-# Icon style (chosen: sample D — engraved, two tones)
+# Icon styles
+
+- **People:** sample D — engraved, two tones (ink + one accent colour). Shown as **circles**.
+- **Places:** soft watercolour over ink, natural colours, full square. Shown as **squares**.
+- **Border colour = role:** light green = faithful/good, red = opposer/bad, yellow = neutral (places, unknown). Set with `data-role` on the icon.
 
 Generator: `python3 tools/gen_icon.py <out.png> person|place "<description>" "<accent hex>"` (model `gpt-image-2`, 1024², white background; then resize to 256 px with `sips -Z 256`).
 
