@@ -36,7 +36,21 @@ If a publication says “may / possibly / apparently” — keep that wording (`
 | Key points | **முக்கியக் குறிப்புகள்** | 6–10 points you must remember | one card each |
 | Deep study | **விரிவான ஆய்வு** | Verse-by-verse: meaning, background, Greek word, cross-refs, lesson | collapsible per verse group |
 
-Every chapter page has these sections, in this order:
+**Layout (app style, not one long page):** top bar (book › chapter, chapter buttons, `Aa`). Left pane = full chapter in Tamil NWT, grouped by the chapter's parts. Right pane = tabs, one view at a time. Tapping a verse opens its note; opening a note highlights its verses. On phones the left pane becomes a “வசனங்கள்” tab.
+
+Every chapter page has these sections (tabs):
+
+| Tab | Contents |
+|---|---|
+| சுருக்கம் | structure bar · 5-min gist · key points |
+| கதை | the chapter's events as a story in question form, tied to Acts and the Hebrew Scriptures, with pictures, evidence chips and a “யோசித்துப் பாருங்கள்” question |
+| வசன ஆய்வு | verse-by-verse notes |
+| யெகோவா | what the chapter shows about Jehovah's qualities (specific, not generic) · how it sanctifies his name · place in the Bible's message (B1) · my life & purpose |
+| பின்னணி | facts · authenticity · links to other books · sources |
+| வரைபடம் · காலம் | maps, pictures, timeline, people, Greek words |
+| பாடங்கள் · கேள்விகள் | lessons · review Q&A |
+
+Older per-section table (kept for reference):
 
 | # | Section | Contents |
 |---|---|---|
@@ -54,6 +68,8 @@ Every chapter page has these sections, in this order:
 ### 1.4 Writing style
 - Simple, clear Tamil (எழுத்துத் தமிழ், but easy). Short sentences.
 - Bible verse names in Tamil short form (`கலா 1:6`, `அப் 9:26`).
+- Use the current Tamil NWT terms — see `research/translation-guide.md` (e.g. திருச்சட்டம், மரக் கம்பம், ஜெபக்கூடம், ஞானஸ்நானம், அளவற்ற கருணை). Add new terms there as you find them.
+- Story/reflection content must still be sourced; mark cross-references we suggest (not from a publication) as “ஒப்பிட்டுப் பார்க்க”.
 - Quote NWT only briefly in the page body; full verse text appears only in the reference popup (from `data/verses-ta.json`).
 - Greek words: transliteration + simple meaning (e.g. *அனாதிமா* = “ஒதுக்கி வைக்கப்பட்டது”).
 - Each point ends with its source tag(s).
@@ -77,7 +93,9 @@ Every chapter page has these sections, in this order:
 - **Icons**: inline SVG line icons (Lucide set, in `assets/app.js`), written as `<i data-i="name"></i>`. No emoji. Tone: clean, educational, not playful.
 - **Bible references** are written as plain text (`அப் 9:26`, `1:4`). `app.js` links them automatically; a bare `1:4` means the page's book (`<body data-book="48">`). Tapping one shows the Tamil NWT verse in a popup with an “open in wol” button. wol.jw.org blocks being embedded in frames, so the popup shows saved text, not the wol page.
 - **Source chips**: `<a class="src" data-src="KEY" href="URL">w07 6/15</a>`; KEY must exist in `data/sources.json` (pub, title, summary, url). Tapping shows the summary popup.
-- **Images**: from wol.jw.org media (`/wol/mp/...`), with caption and credit. Maps we draw ourselves are labelled “simplified, not to scale”.
+- **Images**: saved locally in `assets/img/<book>/` (from jw.org / wol.jw.org media, e.g. lfb lessons, nwtsty media gallery), with caption and source chip.
+- **Character icons**: generated (OpenAI) in one agreed style, saved in `assets/icons/`.
+- **Images (old rule)**: from wol.jw.org media (`/wol/mp/...`), with caption and credit. Maps we draw ourselves are labelled “simplified, not to scale”.
 - After adding a chapter, run `python3 tools/build_verses.py` to save the verse text for every new reference.
 - Accessibility: semantic headings, `<details>` for collapsibles, sufficient contrast.
 

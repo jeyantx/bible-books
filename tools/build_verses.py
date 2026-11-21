@@ -29,6 +29,9 @@ def collect(default_book):
     need = {}
     for f in glob.glob(os.path.join(ROOT, 'books', '**', '*.html'), recursive=True):
         s = open(f, encoding='utf-8').read()
+        page = re.search(r'<body[^>]*data-book="(\d+)"[^>]*data-chapter="(\d+)"', s)
+        if page:  # chapter pages show the whole chapter in the verse pane
+            need.setdefault((int(page.group(1)), int(page.group(2))), set()).update(range(1, 81))
         s = re.sub(r'<span class="src[^>]*>.*?</span>|<a class="src[^>]*>.*?</a>|<summary.*?</summary>|<script.*?</script>', ' ', s, flags=re.S)
         text = html.unescape(re.sub(r'<[^>]+>', ' ', s))
         last_end, book = -10, None
@@ -71,6 +74,7 @@ def main():
         for v in missing:
             t = verse_text(page, b, c, v)
             if t: data[f'{b}:{c}:{v}'] = t
+            elif v > 1 and f'{b}:{c}:{v - 1}' not in data: break
         print(b, c, len(missing))
     json.dump(data, open(OUT, 'w', encoding='utf-8'), ensure_ascii=False, indent=0, sort_keys=True)
     print('verses:', len(data))

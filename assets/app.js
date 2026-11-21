@@ -38,6 +38,14 @@
     anchor: '<circle cx="12" cy="5" r="3"/><path d="M12 22V8M5 12H2a10 10 0 0 0 20 0h-3"/>',
     quote: '<path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1z"/><path d="M15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2h.75c0 2.25.25 4-2.75 4v3c0 1 0 1 1 1z"/>',
     alert: '<path d="m21.7 18-8-14a2 2 0 0 0-3.4 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.7-3"/><path d="M12 9v4M12 17h.01"/>',
+    heart: '<path d="M19 14c1.5-1.5 3-3.2 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.8 0-3 .5-4.5 2-1.5-1.5-2.7-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4 3 5.5l7 7z"/>',
+    crown: '<path d="m2 4 3 12h14l3-12-6 7-4-7-4 7z"/><path d="M5 20h14"/>',
+    shield: '<path d="M20 13c0 5-3.5 7.5-7.7 9a1 1 0 0 1-.6 0C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.2-2.7a1.2 1.2 0 0 1 1.6 0C14.5 3.8 17 5 19 5a1 1 0 0 1 1 1z"/>',
+    sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
+    hourglass: '<path d="M5 22h14M5 2h14M17 22v-4.2a2 2 0 0 0-.6-1.4L12 12l-4.4 4.4a2 2 0 0 0-.6 1.4V22M7 2v4.2a2 2 0 0 0 .6 1.4L12 12l4.4-4.4a2 2 0 0 0 .6-1.4V2"/>',
+    refresh: '<path d="M3 12a9 9 0 0 1 15-6.7L21 8M21 3v5h-5M21 12a9 9 0 0 1-15 6.7L3 16M3 21v-5h5"/>',
+    footprints: '<path d="M4 16v-2.4C4 11.5 3 10.5 3 8c0-2.7 1.5-6 4.5-6C9.4 2 10 3.8 10 5.5c0 3.1-2 5.7-2 8.7V16a2 2 0 1 1-4 0zM20 20v-2.4c0-2.1 1-3.1 1-5.6 0-2.7-1.5-6-4.5-6C14.6 6 14 7.8 14 9.5c0 3.1 2 5.7 2 8.7V20a2 2 0 1 0 4 0zM16 17h4M4 13h4"/>',
+    eye: '<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
     chevl: '<path d="m15 18-6-6 6-6"/>', chevr: '<path d="m9 18 6-6-6-6"/>'
   };
   function icon(name, cls) {
@@ -179,15 +187,6 @@
     var rb = document.getElementById('reader-btn');
     if (rb) buildReader(rb);
 
-    // reading progress
-    var bar = document.querySelector('.progress span');
-    if (bar) {
-      var upd = function () {
-        var h = document.documentElement.scrollHeight - innerHeight;
-        bar.style.width = (h > 0 ? Math.min(100, scrollY / h * 100) : 0) + '%';
-      };
-      addEventListener('scroll', upd, { passive: true }); upd();
-    }
 
     // Bible references → popup
     var main = document.querySelector('main');
@@ -210,20 +209,77 @@
       ex.querySelector('span').textContent = openAll ? 'அனைத்தையும் மூடு' : 'அனைத்தையும் திற';
     });
 
-    // active tab
-    var tabs = document.querySelectorAll('.tabs a');
-    if (!tabs.length || !('IntersectionObserver' in window)) return;
-    var map = {};
-    tabs.forEach(function (a) { map[a.getAttribute('href').slice(1)] = a; });
-    var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (en) {
-        if (en.isIntersecting && map[en.target.id]) {
-          tabs.forEach(function (a) { a.classList.remove('active'); });
-          var t = map[en.target.id]; t.classList.add('active');
-          t.parentNode.scrollTo({ left: t.offsetLeft - 16, behavior: 'smooth' });
-        }
-      });
-    }, { rootMargin: '-120px 0px -60% 0px' });
-    Object.keys(map).forEach(function (id) { var el = document.getElementById(id); if (el) io.observe(el); });
+    if (document.body.classList.contains('app')) initApp();
   });
+
+  // ---------- two-pane chapter app ----------
+  function rangeOf(text) {
+    var m = /(\d+):(\d+)(?:[–-](\d+))?/.exec(text || '');
+    return m ? [+m[2], +(m[3] || m[2])] : null;
+  }
+  function initApp() {
+    var body = document.body, book = +body.dataset.book, ch = +body.dataset.chapter;
+    var content = document.querySelector('.content'), list = document.getElementById('vlist');
+    var views = document.querySelectorAll('.view'), tabs = document.querySelectorAll('.tabs button');
+
+    function show(v, keepScroll) {
+      body.classList.toggle('show-verses', v === 'verses');
+      tabs.forEach(function (b) { b.classList.toggle('on', b.dataset.v === v); });
+      if (v !== 'verses') {
+        views.forEach(function (s) { s.classList.toggle('on', s.dataset.view === v); });
+        if (!keepScroll) content.scrollTop = 0;
+        try { history.replaceState(null, '', '#' + v); } catch (e) {}
+      }
+    }
+    tabs.forEach(function (b) { b.addEventListener('click', function () { show(b.dataset.v); }); });
+    document.addEventListener('click', function (e) {
+      var go = e.target.closest('[data-go]'); if (!go) return;
+      e.preventDefault(); show(go.dataset.go);
+      if (go.dataset.verse) focusVerse(+go.dataset.verse);
+    });
+    var start = location.hash.slice(1);
+    show(document.querySelector('.view[data-view="' + start + '"]') ? start : views[0].dataset.view);
+
+    // tag each study block with its verse range
+    var blocks = [].slice.call(document.querySelectorAll('details.vs'));
+    blocks.forEach(function (d) { var r = rangeOf(d.querySelector('.vref').textContent); if (r) d.dataset.r = r.join('-'); });
+
+    function highlight(a, b, scrollPane) {
+      var first = null;
+      list.querySelectorAll('.verse').forEach(function (x) {
+        var n = +x.dataset.v, on = n >= a && n <= b; x.classList.toggle('hl', on); if (on && !first) first = x;
+      });
+      if (first && scrollPane) list.parentNode.scrollTo({ top: first.offsetTop - 60, behavior: 'smooth' });
+    }
+    function focusVerse(v) {
+      var d = blocks.filter(function (b) { if (!b.dataset.r) return false; var r = b.dataset.r.split('-'); return v >= +r[0] && v <= +r[1]; })[0];
+      if (window.matchMedia('(max-width:860px)').matches || !document.querySelector('.view.on[data-view="study"]')) show('study', true);
+      blocks.forEach(function (b) { b.classList.remove('hl'); });
+      if (d) {
+        var r = d.dataset.r.split('-'); d.open = true; d.classList.add('hl'); highlight(+r[0], +r[1], false);
+        setTimeout(function () { d.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 30);
+      } else highlight(v, v, false);
+    }
+    blocks.forEach(function (d) {
+      d.addEventListener('toggle', function () {
+        if (!d.open || !d.dataset.r) return;
+        var r = d.dataset.r.split('-'); highlight(+r[0], +r[1], true);
+      });
+    });
+
+    // verse pane
+    var parts = JSON.parse(document.getElementById('verses').dataset.parts || '[]');
+    getJSON('verses-ta.json').then(function (d) {
+      data.verses = d;
+      var html = parts.map(function (p) {
+        var rows = '';
+        for (var v = p[0]; v <= p[1]; v++) {
+          rows += '<div class="verse" data-v="' + v + '"><span class="n">' + v + '</span><p>' + esc(d[book + ':' + ch + ':' + v] || '') + '</p></div>';
+        }
+        return '<div class="vgroup"><div class="vgroup-title">' + p[0] + '–' + p[1] + ' · ' + esc(p[2]) + '</div>' + rows + '</div>';
+      }).join('');
+      list.innerHTML = html;
+      list.addEventListener('click', function (e) { var x = e.target.closest('.verse'); if (x) focusVerse(+x.dataset.v); });
+    });
+  }
 })();
