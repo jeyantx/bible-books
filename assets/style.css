@@ -552,7 +552,8 @@ figure img{width:100%;height:auto;max-height:min(420px,60vh);object-fit:contain;
 body.has-player .content,body.has-player .page,body.has-player .verses{padding-bottom:84px}
 body.has-player .update-bar{bottom:88px}
 @media (max-width:600px){
-  .player{bottom:0;width:100%;border-radius:16px 16px 0 0;border-bottom:0;padding:10px 10px calc(10px + env(safe-area-inset-bottom))}
+  .player{bottom:calc(8px + env(safe-area-inset-bottom));width:calc(100% - 16px);border-radius:999px;padding:6px 8px 6px 6px;box-shadow:0 6px 24px rgba(0,0,0,.22)}
+  .pl-play{width:40px;height:40px}
   .pl-btn{width:34px}
   .pl-back{display:none}
 }
@@ -561,3 +562,6 @@ body.has-player .update-bar{bottom:88px}
 .audio-row{display:flex;align-items:center;gap:10px;flex-direction:row;padding:10px 14px;background:var(--pane);border:1px solid var(--line);border-radius:10px;font:600 14px var(--sans);color:var(--text);cursor:pointer;text-align:left}
 .audio-row .i{width:28px;height:28px;padding:7px;border-radius:50%;background:var(--accent);color:var(--pane);fill:currentColor;stroke:none}
 .audio-row:hover{border-color:var(--accent)}
+
+/* drawers always cover the player; hide it underneath while a drawer is open */
+body.noscroll .player{visibility:hidden}
