@@ -36,12 +36,25 @@ If a publication says “may / possibly / apparently” — keep that wording (`
 | Key points | **முக்கியக் குறிப்புகள்** | 6–10 points you must remember | one card each |
 | Deep study | **விரிவான ஆய்வு** | Verse-by-verse: meaning, background, Greek word, cross-refs, lesson | collapsible per verse group |
 
-Plus where useful: timeline, people & places, word studies, “for me today” lessons, self-review questions, full source list.
+Every chapter page has these sections, in this order:
+
+| # | Section | Contents |
+|---|---|---|
+| 1 | சுருக்கம் | 5-min gist + clickable structure bar of the chapter's parts + one-line takeaway |
+| 2 | பின்னணி | Facts grid (author, when, where, to whom, why, what it proves) · where the chapter sits in the book · photo (e.g. manuscript) |
+| 3 | மையக் கருத்து | How the chapter links to the Bible's core theme (Kingdom / promised Seed / ransom / Jehovah's name) as a step chain, sourced |
+| 4 | முக்கியக் குறிப்புகள் | 6–10 numbered cards |
+| 5 | வசனவாரியாக | Collapsible verse groups: meaning, background, Greek box, cross-refs, lesson callout, sources |
+| 6 | வரைபடம் | Simple Tamil SVG map of the chapter's places (numbered route + legend) + nwtsty maps/images |
+| 7 | காலவரிசை | Timeline (chapter events highlighted) · people & places table · Greek word table |
+| 8 | பாடங்கள் | Personal lessons |
+| 9 | மறுபார்வை | Q&A (tap to reveal) |
+| 10 | ஆதாரங்கள் | Full source list |
 
 ### 1.4 Writing style
 - Simple, clear Tamil (எழுத்துத் தமிழ், but easy). Short sentences.
 - Bible verse names in Tamil short form (`கலா 1:6`, `அப் 9:26`).
-- Quote NWT only briefly; link to wol for full verse text.
+- Quote NWT only briefly in the page body; full verse text appears only in the reference popup (from `data/verses-ta.json`).
 - Greek words: transliteration + simple meaning (e.g. *அனாதிமா* = “ஒதுக்கி வைக்கப்பட்டது”).
 - Each point ends with its source tag(s).
 
@@ -59,7 +72,13 @@ Plus where useful: timeline, people & places, word studies, “for me today” l
   3. Verse references are links to wol.jw.org (Tamil)
   4. Source chips (`w07 6/15`) link to the exact article
   5. Previous / next chapter navigation
-- **Colors** via CSS variables only. Accent per book is allowed (`--accent`).
+- **Colors** via CSS variables only. Themes: auto / light / sepia / dark.
+- **Reader settings** (`Aa` button): font size (4 steps), Sans/Serif, line spacing, theme — saved per browser. Reading progress bar under the top bar.
+- **Icons**: inline SVG line icons (Lucide set, in `assets/app.js`), written as `<i data-i="name"></i>`. No emoji. Tone: clean, educational, not playful.
+- **Bible references** are written as plain text (`அப் 9:26`, `1:4`). `app.js` links them automatically; a bare `1:4` means the page's book (`<body data-book="48">`). Tapping one shows the Tamil NWT verse in a popup with an “open in wol” button. wol.jw.org blocks being embedded in frames, so the popup shows saved text, not the wol page.
+- **Source chips**: `<a class="src" data-src="KEY" href="URL">w07 6/15</a>`; KEY must exist in `data/sources.json` (pub, title, summary, url). Tapping shows the summary popup.
+- **Images**: from wol.jw.org media (`/wol/mp/...`), with caption and credit. Maps we draw ourselves are labelled “simplified, not to scale”.
+- After adding a chapter, run `python3 tools/build_verses.py` to save the verse text for every new reference.
 - Accessibility: semantic headings, `<details>` for collapsibles, sufficient contrast.
 
 ---
@@ -68,7 +87,11 @@ Plus where useful: timeline, people & places, word studies, “for me today” l
 
 ```
 index.html                 ← home: list of books
-assets/style.css, app.js   ← shared UI
+assets/style.css, app.js   ← shared UI (themes, reader, icons, popups)
+data/verses-ta.json        ← Tamil NWT verse text for popups (generated)
+data/sources.json          ← source summaries for popups
+tools/build_verses.py      ← scans pages, fetches verses from wol
+tools/<book><ch>_map.py    ← generator for a chapter's SVG map
 books/<book>/index.html    ← book intro (author, date, outline)
 books/<book>/<ch>.html     ← chapter page
 research/<book>/<ch>-sources.md ← raw notes + links
