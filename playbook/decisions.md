@@ -31,9 +31,10 @@ Collected from the owner's feedback while building Galatians. If something here 
 - Icons: line icons (Lucide), **no emoji**.
 - Popups: verse popup = Tamil text (+ English if on) + "open in wol". Source chip popup = our Tamil summary + link. Images = full-screen viewer (zoom, pan, swipe down, ×), never a new tab.
 - Phone:
-  - Verse tap opens a **bottom sheet** with the verses + note (not a tab switch).
+  - Verse tap opens a **bottom sheet** with the verses + note (not a tab switch). Every bottom sheet has a handle and **closes by dragging down**, not only ×.
+  - On phones the verse list is a normal view inside the same scroller as the other tabs, so the title scrolls away identically everywhere (owner liked how ஆய்வு behaved).
   - Tabs must always stay reachable; tab row scrolls **sideways only** (no vertical drag).
-  - The **top bar always stays** (owner did not want it hidden). The chapter **title shrinks and fades continuously with the scroll** (slow, scroll-linked — a sudden hide looked like a jerk); in the verse list it collapses over ~1.6× its height; in other tabs it scrolls away with the text. Only the tab row stays pinned.
+  - The **top bar always stays** (owner did not want it hidden). The chapter **title shrinks and fades continuously with the scroll** (slow, scroll-linked — a sudden hide looked like a jerk); it scrolls away naturally with the text in every tab, including the verse list. Only the tab row stays pinned.
   - Anything absolutely positioned must not live inside the bar (the bar clips when hiding) — e.g. the Aa panel is attached to `<body>`.
 - Chapter pages: previous/next chapter — ‹ › in the bar on phones, and a pager at the end of every tab and of the verse list; navigation keeps the current tab.
 - Book page: **chapter number buttons right under the title**; "continue reading" as one quiet line (home page keeps the card); every other section **collapsed by default** as cards (people come back for verses, not descriptions).

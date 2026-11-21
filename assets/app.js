@@ -125,6 +125,25 @@
     popBody = pop.querySelector('.pop-body'); popTitle = pop.querySelector('.pop-title'); popLink = pop.querySelector('.pop-foot a');
     pop.addEventListener('click', function (e) { if (e.target.closest('[data-close]')) close(); });
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape') close(); });
+    // phones: drag the sheet down to close (from the handle/header, or from the body when it is scrolled to the top)
+    var card = pop.querySelector('.pop-card'), y0 = null, dy = 0;
+    card.addEventListener('touchstart', function (e) {
+      if (!window.matchMedia('(max-width:600px)').matches || e.touches.length !== 1) return;
+      var onHead = e.target.closest('.pop-head');
+      y0 = (onHead || popBody.scrollTop <= 0) ? e.touches[0].clientY : null; dy = 0;
+    }, { passive: true });
+    card.addEventListener('touchmove', function (e) {
+      if (y0 === null) return;
+      dy = e.touches[0].clientY - y0;
+      if (dy > 0) { card.style.transition = 'none'; card.style.transform = 'translateY(' + dy + 'px)'; if (e.cancelable) e.preventDefault(); }
+      else if (!e.target.closest('.pop-head')) y0 = null;         // scrolling up inside the content: let it scroll
+    }, { passive: false });
+    card.addEventListener('touchend', function () {
+      if (y0 === null) return; y0 = null;
+      card.style.transition = 'transform .18s ease-out';
+      if (dy > 90) { card.style.transform = 'translateY(100%)'; setTimeout(function () { card.style.transform = ''; card.style.transition = ''; close(); }, 170); }
+      else card.style.transform = '';
+    });
   }
   function open(title, bodyHtml, url, mode) {
     pop.className = 'pop' + (mode ? ' ' + mode : '');
@@ -376,11 +395,27 @@
       if (getComputedStyle(head).display === 'contents') { var t = document.querySelector('.tabs'); return t ? t.offsetHeight : 0; }
       return getComputedStyle(head).position === 'sticky' ? head.offsetHeight : 0;
     }
+    // phones: move the verse list into the content scroller as a normal "verses" view; desktop: back to the side pane
+    var aside = document.getElementById('verses'), vview = document.createElement('section');
+    vview.className = 'view'; vview.dataset.view = 'verses';
+    var mqPhone = window.matchMedia('(max-width:860px)');
+    function placeVerses() {
+      var target = mqPhone.matches ? vview : aside;
+      if (mqPhone.matches && !vview.parentNode) document.querySelector('.content').appendChild(vview);
+      [].slice.call((target === vview ? aside : vview).childNodes).forEach(function (n) { target.appendChild(n); });
+      views = document.querySelectorAll('.view');
+    }
+    placeVerses();
+    (mqPhone.addEventListener ? mqPhone.addEventListener.bind(mqPhone, 'change') : mqPhone.addListener.bind(mqPhone))(function () {
+      placeVerses(); if (!mqPhone.matches && body.classList.contains('show-verses')) show('study');
+    });
+    function scroller() { return mqPhone.matches ? content : aside; }
+
     function show(v, keepScroll) {
       body.classList.toggle('show-verses', v === 'verses');
       document.dispatchEvent(new Event('view-change'));
       tabs.forEach(function (b) { b.classList.toggle('on', b.dataset.v === v); });
-      if (v !== 'verses') {
+      if (v !== 'verses' || mqPhone.matches) {
         views.forEach(function (s) { s.classList.toggle('on', s.dataset.view === v); });
         if (!keepScroll) content.scrollTop = 0;
         try { history.replaceState(null, '', '#' + v); } catch (e) {}
@@ -462,8 +497,8 @@
         var n = +x.dataset.v, on = n >= a && n <= b; x.classList.toggle('hl', on); if (on && !first) first = x;
       });
       if (first && scrollPane) {
-        var pane = list.parentNode, head = pane.querySelector('.pane-head');
-        pane.scrollTo({ top: first.getBoundingClientRect().top - pane.getBoundingClientRect().top + pane.scrollTop - (head ? head.offsetHeight : 0) - 12, behavior: 'smooth' });
+        var pane = scroller(), head = mqPhone.matches ? null : aside.querySelector('.pane-head');
+        pane.scrollTo({ top: first.getBoundingClientRect().top - pane.getBoundingClientRect().top + pane.scrollTop - (head ? head.offsetHeight : pinnedTop()) - 12, behavior: 'smooth' });
       }
     }
     function focusVerse(v) {
@@ -538,27 +573,7 @@
         (prev ? '<a href="' + prev.getAttribute('href') + '">' + icon('chevl') + '<span><small>முந்தைய</small>அதிகாரம் ' + prev.textContent + '</span></a>' : '<span></span>') +
         (next ? '<a class="next" href="' + next.getAttribute('href') + '"><span><small>அடுத்த</small>அதிகாரம் ' + next.textContent + '</span>' + icon('chevr') + '</a>' : '<span></span>') + '</nav>';
       views.forEach(function (sec) { sec.insertAdjacentHTML('beforeend', pager); });
-      var vp = document.querySelector('.verses'); if (vp) vp.insertAdjacentHTML('beforeend', '<div class="vpager">' + pager + '</div>');
       document.addEventListener('click', function (e) { var a = e.target.closest('.chnav a, .ch-pager a, .chsel a'); if (a) go(a, e); });
-    })();
-
-    // phone: the chapter title shrinks and fades continuously as the reader scrolls (verses or notes); the top bar always stays
-    (function () {
-      var mq = window.matchMedia('(max-width:860px)'), h1 = document.querySelector('.chead h1'), full = 0;
-      if (!h1) return;
-      function measure() { h1.style.maxHeight = ''; h1.style.opacity = ''; full = h1.scrollHeight; }
-      function update(y) {
-        if (!mq.matches) { h1.style.maxHeight = ''; h1.style.opacity = ''; return; }
-        if (!full) measure();
-        var k = Math.min(1, Math.max(0, y / (full * 1.6)));         // gentle: needs ~1.6× its height of scrolling
-        h1.style.maxHeight = (full * (1 - k)) + 'px';
-        h1.style.opacity = String(1 - k);
-        h1.style.paddingTop = (12 * (1 - k)) + 'px';
-      }
-      var pane = document.querySelector('.verses');
-      if (pane) pane.addEventListener('scroll', function () { if (body.classList.contains('show-verses')) update(pane.scrollTop); }, { passive: true });
-      document.addEventListener('view-change', function () { update(body.classList.contains('show-verses') ? (pane ? pane.scrollTop : 0) : 0); });
-      addEventListener('resize', function () { full = 0; update(0); });
     })();
 
     // chapter audio in the verse pane header

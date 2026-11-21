@@ -87,10 +87,6 @@ body.app{display:flex;flex-direction:column;height:100vh;height:100dvh;overflow:
 @media (max-width:860px){
   .shell{grid-template-columns:1fr}
   .verses{display:none}
-  body.show-verses .shell{display:flex;flex-direction:column}
-  body.show-verses .verses{display:block;order:2;flex:1;min-height:0}
-  body.show-verses .content{flex:none;overflow:visible}
-  body.show-verses .content .view{display:none}
   .tabs .mob{display:inline-flex}
   .chead{padding:10px 16px 0}
   .chead h1{font-size:1.08em}
@@ -470,7 +466,6 @@ details.sec[open]>summary{border-bottom:1px solid var(--line)}
 }
 
 /* phone: title collapses with scroll (values set by app.js) */
-@media (max-width:860px){ .chead h1{overflow:hidden;will-change:max-height,opacity} }
 /* update-available bar */
 .update-bar{position:fixed;left:50%;bottom:max(16px,env(safe-area-inset-bottom));transform:translateX(-50%);z-index:90;display:flex;align-items:center;gap:10px;background:var(--text);color:var(--bg);padding:8px 8px 8px 16px;border-radius:999px;box-shadow:0 8px 30px rgba(0,0,0,.25);font-size:14px;white-space:nowrap}
 .update-bar button{border:0;border-radius:999px;padding:6px 14px;background:var(--accent);color:#fff;font:600 13px var(--sans);cursor:pointer}
@@ -489,3 +484,17 @@ details.sec[open]>summary{border-bottom:1px solid var(--line)}
 .ch-pager .next{text-align:right;margin-left:auto}
 .ch-pager .i{color:var(--accent)}
 .vpager{padding:0 20px 24px}
+
+/* phone: verse list is a normal view inside the content scroller */
+@media (max-width:860px){
+  .view[data-view="verses"]{padding:0 0 40px}
+  .view[data-view="verses"] .pane-head{position:static;background:transparent;border-bottom:0;padding:10px 16px 0}
+  .view[data-view="verses"] .vgroup{padding:4px 16px 8px}
+  .view[data-view="verses"] .vpager{padding:0 16px 24px}
+}
+/* bottom sheet handle */
+@media(max-width:600px){
+  .pop-card{touch-action:pan-y}
+  .pop-head{position:relative;padding-top:18px}
+  .pop-head::before{content:"";position:absolute;top:7px;left:50%;transform:translateX(-50%);width:40px;height:4px;border-radius:4px;background:var(--line)}
+}
