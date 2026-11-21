@@ -41,7 +41,7 @@ img{max-width:100%;height:auto;display:block}
 .icon-btn.ghost{border-color:transparent;background:transparent}
 
 /* reader panel */
-.reader-panel{position:absolute;right:16px;top:56px;z-index:40;width:min(320px,calc(100vw - 32px));background:var(--pane);border:1px solid var(--line);border-radius:var(--r);box-shadow:0 12px 40px rgba(0,0,0,.16);padding:14px;font-size:14px;line-height:1.4}
+.reader-panel{position:fixed;right:16px;top:58px;z-index:60;max-height:calc(100vh - 80px);overflow:auto;width:min(320px,calc(100vw - 32px));background:var(--pane);border:1px solid var(--line);border-radius:var(--r);box-shadow:0 12px 40px rgba(0,0,0,.16);padding:14px;font-size:14px;line-height:1.4}
 .rp-row{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}
 .rp-row:last-child{margin-bottom:0}
 .rp-label{font-size:12px;color:var(--muted);font-weight:600}

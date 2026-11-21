@@ -202,7 +202,8 @@
       group('வரி இடைவெளி', 'spacing', [['normal', 'சாதாரண'], ['relaxed', 'அகலமாக']]) +
       group('தோற்றம்', 'theme', [['', 'தானியங்கி'], ['light', 'வெளிர்'], ['sepia', 'செபியா'], ['dark', 'இருள்']]) +
       group('ஆங்கில வசனம் (ஒப்பிட)', 'en', [['off', 'வேண்டாம்'], ['on', 'காட்டு']]);
-    btn.parentNode.appendChild(panel);
+    document.body.appendChild(panel);  // outside the bar: the bar clips overflow on phones (auto-hide)
+    function place() { var r = btn.getBoundingClientRect(); panel.style.top = (r.bottom + 6) + 'px'; panel.style.right = Math.max(12, innerWidth - r.right) + 'px'; }
     function sync() {
       panel.querySelectorAll('.seg').forEach(function (s) {
         s.querySelectorAll('button').forEach(function (b) { b.classList.toggle('on', PREFS[s.dataset.key] === b.dataset.val); });
@@ -213,8 +214,9 @@
       PREFS[b.parentNode.dataset.key] = b.dataset.val; apply(); save(); sync();
       if (b.parentNode.dataset.key === 'en') document.dispatchEvent(new Event('en-change'));
     });
-    btn.addEventListener('click', function (e) { e.stopPropagation(); panel.hidden = !panel.hidden; sync(); });
-    document.addEventListener('click', function (e) { if (!panel.hidden && !panel.contains(e.target) && e.target !== btn) panel.hidden = true; });
+    btn.addEventListener('click', function (e) { e.stopPropagation(); place(); panel.hidden = !panel.hidden; sync(); });
+    addEventListener('resize', function () { if (!panel.hidden) place(); });
+    document.addEventListener('click', function (e) { if (!panel.hidden && !panel.contains(e.target) && !btn.contains(e.target)) panel.hidden = true; });
   }
 
   if ('serviceWorker' in navigator) { try { navigator.serviceWorker.register(BASE + 'sw.js'); } catch (e) {} }
