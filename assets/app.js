@@ -461,6 +461,31 @@
     }
     document.addEventListener('en-change', fillEnglish);
 
+    // phone: hide the top bar and chapter title while scrolling down; keep the tab row; show again on scroll up
+    (function () {
+      var mq = window.matchMedia('(max-width:860px)'), head = document.querySelector('.chead');
+      function watch(el) {
+        var lastY = 0, acc = 0;
+        el.addEventListener('scroll', function () {
+          if (!mq.matches) { body.classList.remove('chrome-hidden'); return; }
+          var y = el.scrollTop, dy = y - lastY; lastY = y;
+          if (Date.now() < lock) { acc = 0; return; }             // ignore the jump caused by our own toggle
+          acc = (acc > 0) === (dy > 0) ? acc + dy : dy;           // distance in the current direction
+          var hide = body.classList.contains('chrome-hidden');
+          if (!hide && y > 120 && acc > 40) set(true, el);
+          else if (hide && (acc < -30 || y < 40)) set(false, el);
+        }, { passive: true });
+      }
+      var lock = 0;
+      function set(on, el) {
+        lock = Date.now() + 350;
+        var before = head.offsetHeight;
+        body.classList.toggle('chrome-hidden', on);
+        if (el === content) { var d = before - head.offsetHeight; content.scrollTop -= d; }  // no jump in the text
+      }
+      watch(content); watch(document.querySelector('.verses'));
+    })();
+
     // chapter audio in the verse pane header
     getJSON('audio.json').then(function (a) {
       var url = a[book + ':' + ch], head = document.querySelector('.pane-head'); if (!url || !head) return;
