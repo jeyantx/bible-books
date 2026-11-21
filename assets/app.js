@@ -4,12 +4,12 @@
   var BASE = (document.currentScript && document.currentScript.src.replace(/assets\/app\.js.*$/, '')) || '../../';
 
   // ---------- reader settings (per browser) ----------
-  var PREFS = { theme: '', size: '2', font: 'sans', spacing: 'normal' };
+  var PREFS = { theme: '', size: '2', font: 'sans', spacing: 'normal', en: 'off', brief: 'off' };
   function load() { try { var p = JSON.parse(localStorage.getItem('reader') || '{}'); for (var k in p) PREFS[k] = p[k]; } catch (e) {} }
   function save() { try { localStorage.setItem('reader', JSON.stringify(PREFS)); } catch (e) {} }
   function apply() {
     if (PREFS.theme) root.dataset.theme = PREFS.theme; else delete root.dataset.theme;
-    root.dataset.size = PREFS.size; root.dataset.font = PREFS.font; root.dataset.spacing = PREFS.spacing;
+    root.dataset.size = PREFS.size; root.dataset.font = PREFS.font; root.dataset.spacing = PREFS.spacing; root.dataset.en = PREFS.en;
   }
   load(); apply();
 
@@ -39,6 +39,10 @@
     quote: '<path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1z"/><path d="M15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2h.75c0 2.25.25 4-2.75 4v3c0 1 0 1 1 1z"/>',
     alert: '<path d="m21.7 18-8-14a2 2 0 0 0-3.4 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.7-3"/><path d="M12 9v4M12 17h.01"/>',
     heart: '<path d="M19 14c1.5-1.5 3-3.2 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.8 0-3 .5-4.5 2-1.5-1.5-2.7-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4 3 5.5l7 7z"/>',
+    search: '<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>',
+    play: '<path d="M6 4v16l14-8z"/>',
+    headphones: '<path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/>',
+    check: '<path d="M20 6 9 17l-5-5"/>',
     crown: '<path d="m2 4 3 12h14l3-12-6 7-4-7-4 7z"/><path d="M5 20h14"/>',
     shield: '<path d="M20 13c0 5-3.5 7.5-7.7 9a1 1 0 0 1-.6 0C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.2-2.7a1.2 1.2 0 0 1 1.6 0C14.5 3.8 17 5 19 5a1 1 0 0 1 1 1z"/>',
     sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
@@ -63,12 +67,12 @@
     44: 'அப்போஸ்தலர்', 45: 'ரோமர்', 46: '1 கொரிந்தியர்', 47: '2 கொரிந்தியர்', 48: 'கலாத்தியர்', 49: 'எபேசியர்', 50: 'பிலிப்பியர்', 51: 'கொலோசெயர்',
     52: '1 தெசலோனிக்கேயர்', 54: '1 தீமோத்தேயு', 55: '2 தீமோத்தேயு', 58: 'எபிரெயர்', 60: '1 பேதுரு', 62: '1 யோவான்', 63: '2 யோவான்', 66: 'வெளிப்படுத்துதல்', 13: '1 நாளாகமம்', 14: '2 நாளாகமம்', 15: 'எஸ்றா', 17: 'எஸ்தர்', 21: 'பிரசங்கி', 25: 'புலம்பல்', 33: 'மீகா', 38: 'சகரியா', 57: 'பிலேமோன்', 64: '3 யோவான்', 65: 'யூதா', 16: 'நெகேமியா', 3: 'லேவியராகமம்', 4: 'எண்ணாகமம்', 6: 'யோசுவா', 7: 'நியாயாதிபதிகள்', 9: '1 சாமுவேல்', 10: '2 சாமுவேல்', 11: '1 ராஜாக்கள்', 12: '2 ராஜாக்கள்', 18: 'யோபு', 20: 'நீதிமொழிகள்', 24: 'எரேமியா', 26: 'எசேக்கியேல்', 27: 'தானியேல்', 28: 'ஓசியா', 29: 'யோவேல்', 30: 'ஆமோஸ்', 35: 'ஆபகூக்', 39: 'மல்கியா', 53: '2 தெசலோனிக்கேயர்', 56: 'தீத்து', 59: 'யாக்கோபு', 61: '2 பேதுரு' };
   var bookRe = Object.keys(BOOKS).sort(function (a, b) { return b.length - a.length; }).join('|');
-  var SEG = new RegExp('(?:(' + bookRe + ')\\s?)?(\\d{1,3}):(\\d{1,3}(?:[-–]\\d{1,3})?(?:,\\s?\\d{1,3}(?:[-–]\\d{1,3})?(?![\\u0B80-\\u0BFF\\d:]))*)', 'g');
+  var SEG = new RegExp('(?:(' + bookRe + ')\\s?)?(\\d{1,3}):(\\d{1,3}(?:[-–]\\d{1,3}(?::\\d{1,3})?)?(?:,\\s?\\d{1,3}(?:[-–]\\d{1,3})?(?![\\u0B80-\\u0BFF\\d:]))*)', 'g');
 
   function versesOf(spec) {
     var out = [];
     spec.split(/,\s?/).forEach(function (p) {
-      var ab = p.replace('–', '-').split('-'), a = +ab[0], b = ab[1] ? +ab[1] : a;
+      var ab = p.replace('–', '-').split('-'), a = +ab[0], b = ab[1] && ab[1].indexOf(':') < 0 ? +ab[1] : a;
       if (b < a) b = a; // cross-chapter range like 15:40–16:1
       for (var v = a; v <= Math.min(b, a + 40); v++) out.push(v);
     });
@@ -132,16 +136,24 @@
   function close() { if (pop && !pop.hidden) { pop.hidden = true; document.body.classList.remove('noscroll'); } }
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
 
+  // ---------- optional English verse comparison ----------
+  function withEnglish(cb) {
+    if (PREFS.en !== 'on') { cb(null); return; }
+    if (data.en) { cb(data.en); return; }
+    getJSON('verses-en.json').then(function (d) { data.en = d; cb(d); });
+  }
+  function enLine(en, key) { return en && en[key] ? '<span class="en">' + esc(en[key]) + '</span>' : ''; }
+
   function showRef(a) {
     var b = +a.dataset.b, c = +a.dataset.c, vs = versesOf(a.dataset.v);
     var title = icon('book') + '<span>' + esc((NAMES[b] || '') + ' ' + c + ':' + a.dataset.v) + '</span>';
-    var render = function () {
+    var render = function () { withEnglish(function (en) {
       var html = vs.map(function (v) {
         var t = data.verses[b + ':' + c + ':' + v];
-        return '<p class="pv"><sup>' + v + '</sup>' + (t ? esc(t) : '<span class="muted">இந்த வசனம் இன்னும் சேமிக்கப்படவில்லை — wol-ல் திறக்கவும்.</span>') + '</p>';
+        return '<p class="pv"><sup>' + v + '</sup>' + (t ? esc(t) : '<span class="muted">இந்த வசனம் இன்னும் சேமிக்கப்படவில்லை — wol-ல் திறக்கவும்.</span>') + enLine(en, b + ':' + c + ':' + v) + '</p>';
       }).join('');
-      open(title, html + '<p class="pop-note">புதிய உலக மொழிபெயர்ப்பு</p>', wolUrl(b, c, vs[0]));
-    };
+      open(title, html + '<p class="pop-note">புதிய உலக மொழிபெயர்ப்பு' + (en ? ' · New World Translation' : '') + '</p>', wolUrl(b, c, vs[0]));
+    }); };
     if (data.verses) render(); else getJSON('verses-ta.json').then(function (d) { data.verses = d; render(); });
   }
   function showSrc(a) {
@@ -188,7 +200,8 @@
       group('எழுத்து அளவு', 'size', [['1', 'அ', 'fs1'], ['2', 'அ', 'fs2'], ['3', 'அ', 'fs3'], ['4', 'அ', 'fs4']]) +
       group('எழுத்துரு', 'font', [['sans', 'Sans'], ['serif', 'Serif', 'serif']]) +
       group('வரி இடைவெளி', 'spacing', [['normal', 'சாதாரண'], ['relaxed', 'அகலமாக']]) +
-      group('தோற்றம்', 'theme', [['', 'தானியங்கி'], ['light', 'வெளிர்'], ['sepia', 'செபியா'], ['dark', 'இருள்']]);
+      group('தோற்றம்', 'theme', [['', 'தானியங்கி'], ['light', 'வெளிர்'], ['sepia', 'செபியா'], ['dark', 'இருள்']]) +
+      group('ஆங்கில வசனம் (ஒப்பிட)', 'en', [['off', 'வேண்டாம்'], ['on', 'காட்டு']]);
     btn.parentNode.appendChild(panel);
     function sync() {
       panel.querySelectorAll('.seg').forEach(function (s) {
@@ -198,6 +211,7 @@
     panel.addEventListener('click', function (e) {
       var b = e.target.closest('button'); if (!b) return;
       PREFS[b.parentNode.dataset.key] = b.dataset.val; apply(); save(); sync();
+      if (b.parentNode.dataset.key === 'en') document.dispatchEvent(new Event('en-change'));
     });
     btn.addEventListener('click', function (e) { e.stopPropagation(); panel.hidden = !panel.hidden; sync(); });
     document.addEventListener('click', function (e) { if (!panel.hidden && !panel.contains(e.target) && e.target !== btn) panel.hidden = true; });
@@ -219,7 +233,7 @@
     if (main && book) linkRefs(main, book);
     buildPopup();
     document.addEventListener('click', function (e) {
-      var av = e.target.closest('.avatar[data-person]');
+      var av = e.target.closest('.avatar[data-person], .pcard[data-person]');
       if (av) { e.preventDefault(); showPerson(av.dataset.person); return; }
       var im = e.target.closest('figure img, .st img');
       if (im && !im.closest('.pop')) { e.preventDefault(); showImage(im); return; }
@@ -238,8 +252,57 @@
       ex.querySelector('span').textContent = openAll ? 'அனைத்தையும் மூடு' : 'அனைத்தையும் திற';
     });
 
+    var sb = document.getElementById('search-btn');
+    if (sb) sb.addEventListener('click', openSearch);
+    document.addEventListener('keydown', function (e) { if (e.key === '/' && !/input|textarea/i.test(e.target.tagName)) { e.preventDefault(); openSearch(); } });
+    renderContinue();
+    renderAudioList();
+    var ph = /person~([\w-]+)/.exec(location.hash); if (ph) showPerson(ph[1]);
+
     if (document.body.classList.contains('app')) initApp();
   });
+
+  // ---------- search ----------
+  function openSearch() {
+    open(icon('search') + '<span>தேடு</span>', '<input class="search-input" type="search" placeholder="எ.கா. சந்ததி, ஆபிரகாம், 5:22, மரக் கம்பம்" autocomplete="off"><div class="search-res"><p class="muted small">குறைந்தது 2 எழுத்துக்கள்… (வசனங்கள், விளக்கங்கள், கதை, நபர்கள்)</p></div>', '', 'searchpop');
+    var input = popBody.querySelector('.search-input'), res = popBody.querySelector('.search-res');
+    setTimeout(function () { input.focus(); }, 30);
+    var run = function () {
+      var q = input.value.trim().toLowerCase(); if (q.length < 2) return;
+      var words = q.split(/\s+/);
+      var hits = data.search.filter(function (r) { var t = (r.t + ' ' + r.x).toLowerCase(); return words.every(function (w) { return t.indexOf(w) >= 0; }); });
+      if (!hits.length) { res.innerHTML = '<p class="muted">எதுவும் கிடைக்கவில்லை.</p>'; return; }
+      var KIND = { verse: 'வசனம்', note: 'ஆய்வு', story: 'கதை', section: 'பகுதி', person: 'நபர்/இடம்' };
+      res.innerHTML = '<p class="muted small">' + hits.length + ' முடிவுகள்</p>' + hits.slice(0, 80).map(function (r) {
+        var t = r.x, i = t.toLowerCase().indexOf(words[0]), sn = esc(t.slice(Math.max(0, i - 50), i + 110));
+        words.forEach(function (w) { sn = sn.replace(new RegExp('(' + w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi'), '<mark>$1</mark>'); });
+        return '<a class="sr" href="' + BASE + r.u + '"><span class="sr-k">' + (r.c ? 'அதி. ' + r.c + ' · ' : '') + KIND[r.k] + '</span><b>' + esc(r.t) + '</b><span class="sr-x">' + (i > 50 ? '… ' : '') + sn + ' …</span></a>';
+      }).join('');
+    };
+    var timer; input.addEventListener('input', function () { clearTimeout(timer); timer = setTimeout(run, 150); });
+    if (!data.search) getJSON('search.json').then(function (d) { data.search = Array.isArray(d) ? d : []; run(); });
+  }
+
+  // ---------- continue reading (stored in this browser only) ----------
+  function store(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+  function stored(k) { try { return JSON.parse(localStorage.getItem(k) || 'null'); } catch (e) { return null; } }
+  function renderContinue() {
+    var box = document.getElementById('continue'), last = stored('last');
+    if (!box || !last) return;
+    box.innerHTML = '<a class="continue-card" href="' + BASE + last.u + '"><span class="eyebrow">தொடர்ந்து படிக்க</span><b>' + esc(last.t) + '</b><span>' + esc(last.l) + '</span></a>';
+    box.hidden = false;
+  }
+
+  // ---------- audio (jw.org Tamil audio Bible) ----------
+  function renderAudioList() {
+    var box = document.getElementById('audio-list'); if (!box) return;
+    var book = document.body.dataset.book;
+    getJSON('audio.json').then(function (a) {
+      var html = '';
+      for (var c = 1; a[book + ':' + c]; c++) html += '<div class="audio-row"><span>அதிகாரம் ' + c + '</span><audio controls preload="none" src="' + a[book + ':' + c] + '"></audio></div>';
+      box.innerHTML = html;
+    });
+  }
 
   // ---------- two-pane chapter app ----------
   function rangeOf(text) {
@@ -258,20 +321,77 @@
         views.forEach(function (s) { s.classList.toggle('on', s.dataset.view === v); });
         if (!keepScroll) content.scrollTop = 0;
         try { history.replaceState(null, '', '#' + v); } catch (e) {}
+        remember(v);
       }
     }
+    var path = location.pathname.replace(/^.*\/books\//, 'books/');
+    var title = (document.querySelector('.crumbs b') || {}).textContent || '';
+    var bookName = ((document.querySelectorAll('.crumbs a')[1]) || {}).textContent || '';
+    function remember(v, extra) {
+      var tab = document.querySelector('.tabs button[data-v="' + v + '"]');
+      store('last', { u: path + '#' + v + (extra ? '~' + extra : ''), t: bookName + ' ' + title.replace('அதிகாரம் ', ''), l: (tab ? tab.textContent.trim() : '') + (extra && extra[0] === 'r' ? ' · ' + ch + ':' + extra.slice(1).replace(/^(\d+)-\1$/, '$1') : '') });
+      var seen = stored('seen') || {}; seen[path] = seen[path] || [];
+      if (seen[path].indexOf(v) < 0) seen[path].push(v); store('seen', seen); markSeen();
+    }
+    function markSeen() {
+      var seen = (stored('seen') || {})[path] || [];
+      tabs.forEach(function (b) { b.classList.toggle('seen', seen.indexOf(b.dataset.v) >= 0); });
+    }
+    markSeen();
     tabs.forEach(function (b) { b.addEventListener('click', function () { show(b.dataset.v); }); });
     document.addEventListener('click', function (e) {
       var go = e.target.closest('[data-go]'); if (!go) return;
       e.preventDefault(); show(go.dataset.go);
       if (go.dataset.verse) focusVerse(+go.dataset.verse);
     });
-    var start = location.hash.slice(1);
-    show(document.querySelector('.view[data-view="' + start + '"]') ? start : views[0].dataset.view);
+    var pendingHash = location.hash;
+    function route() {
+      var h = decodeURIComponent((pendingHash || location.hash).slice(1)).split('~'), v = h[0], tgt = h[1];
+      pendingHash = '';
+      if (!document.querySelector('.view[data-view="' + v + '"]')) v = views[0].dataset.view;
+      show(v);
+      if (!tgt) return;
+      setTimeout(function () {
+        if (tgt[0] === 'v') { focusVerse(+tgt.slice(1)); return; }
+        if (tgt[0] === 'r') { focusVerse(+tgt.slice(1).split('-')[0]); return; }
+        var el = document.getElementById(v + '-' + tgt);
+        if (el) {
+          if (el.tagName === 'DETAILS') el.open = true;
+          var head = document.querySelector('.chead'), sticky = getComputedStyle(head).position === 'sticky' ? head.offsetHeight : 0;
+          content.scrollTo({ top: el.getBoundingClientRect().top - content.getBoundingClientRect().top + content.scrollTop - sticky - 12 });
+          el.classList.add('flash'); setTimeout(function () { el.classList.remove('flash'); }, 1600);
+        }
+      }, 60);
+    }
+    // stable ids for search links: story articles and section headings
+    views.forEach(function (sec) {
+      sec.querySelectorAll('article.st').forEach(function (a, i) { a.id = sec.dataset.view + '-st' + i; });
+      sec.querySelectorAll('h2').forEach(function (h, i) { h.id = sec.dataset.view + '-h' + i; });
+    });
+    window.addEventListener('hashchange', function () { close(); route(); });
+    (function () { var v0 = decodeURIComponent(location.hash.slice(1)).split('~')[0]; show(document.querySelector('.view[data-view="' + v0 + '"]') ? v0 : views[0].dataset.view); })();
 
     // tag each study block with its verse range
     var blocks = [].slice.call(document.querySelectorAll('details.vs'));
     blocks.forEach(function (d) { var r = rangeOf(d.querySelector('.vref').textContent); if (r) d.dataset.r = r.join('-'); });
+
+    // short / detailed switch for the ஆய்வு tab
+    blocks.forEach(function (d) {
+      var vb = d.querySelector('.vbody'); if (!vb) return;
+      var lead = [].slice.call(vb.children).filter(function (c) { return /^(P|UL|DIV)$/.test(c.tagName) && !c.classList.contains('greek'); })[0];
+      if (lead) lead.classList.add('lead-item');
+      var more = document.createElement('button'); more.className = 'more-btn'; more.textContent = 'மேலும் படிக்க';
+      more.addEventListener('click', function () { d.classList.add('full'); }); vb.appendChild(more);
+    });
+    var studyIntro = document.querySelector('.view[data-view="study"] .intro');
+    if (studyIntro) {
+      var bt = document.createElement('div'); bt.className = 'seg brief-seg';
+      bt.innerHTML = '<button data-b="off">விரிவாக</button><button data-b="on">சுருக்கமாக</button>';
+      studyIntro.appendChild(bt);
+      var syncBrief = function () { body.classList.toggle('brief', PREFS.brief === 'on'); bt.querySelectorAll('button').forEach(function (b) { b.classList.toggle('on', b.dataset.b === PREFS.brief); }); };
+      bt.addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; PREFS.brief = b.dataset.b; save(); blocks.forEach(function (d) { d.classList.remove('full'); }); syncBrief(); });
+      syncBrief();
+    }
 
     function highlight(a, b, scrollPane) {
       var first = null;
@@ -290,8 +410,8 @@
         var rr = d ? d.dataset.r.split('-') : [v, v];
         highlight(+rr[0], +rr[1], false);
         if (!d) return;
-        var vt = '';
-        for (var n = +rr[0]; n <= +rr[1]; n++) vt += '<p class="pv"><sup>' + n + '</sup>' + esc((data.verses || {})[book + ':' + ch + ':' + n] || '') + '</p>';
+        var vt = '', en = PREFS.en === 'on' ? data.en : null;
+        for (var n = +rr[0]; n <= +rr[1]; n++) vt += '<p class="pv"><sup>' + n + '</sup>' + esc((data.verses || {})[book + ':' + ch + ':' + n] || '') + enLine(en, book + ':' + ch + ':' + n) + '</p>';
         open(icon('book') + '<span>' + esc(d.querySelector('.vref').textContent + ' · ' + d.querySelector('.vtitle').textContent) + '</span>',
           '<div class="sheet-verses">' + vt + '</div><div class="vbody sheet-note">' + d.querySelector('.vbody').innerHTML + '</div>', '', 'sheet');
         linkRefs(popBody.querySelector('.sheet-note'), book);
@@ -311,6 +431,7 @@
       d.addEventListener('toggle', function () {
         if (!d.open || !d.dataset.r) return;
         var r = d.dataset.r.split('-'); highlight(+r[0], +r[1], true);
+        remember('study', 'r' + d.dataset.r);
       });
     });
 
@@ -327,6 +448,29 @@
       }).join('');
       list.innerHTML = html;
       list.addEventListener('click', function (e) { var x = e.target.closest('.verse'); if (x) focusVerse(+x.dataset.v); });
+      fillEnglish();
+      route();
+    });
+    function fillEnglish() {
+      withEnglish(function (en) {
+        list.querySelectorAll('.verse').forEach(function (x) {
+          var p = x.querySelector('p'), old = p.querySelector('.en'); if (old) old.remove();
+          if (en) p.insertAdjacentHTML('beforeend', enLine(en, book + ':' + ch + ':' + x.dataset.v));
+        });
+      });
+    }
+    document.addEventListener('en-change', fillEnglish);
+
+    // chapter audio in the verse pane header
+    getJSON('audio.json').then(function (a) {
+      var url = a[book + ':' + ch], head = document.querySelector('.pane-head'); if (!url || !head) return;
+      var btn = document.createElement('button'); btn.className = 'icon-btn ghost audio-btn'; btn.innerHTML = icon('headphones') + '<span>கேள்</span>';
+      head.insertBefore(btn, head.querySelector('a'));
+      btn.addEventListener('click', function () {
+        var bar = document.querySelector('.audio-bar');
+        if (bar) { bar.remove(); return; }
+        head.insertAdjacentHTML('afterend', '<div class="audio-bar"><audio controls autoplay preload="none" src="' + url + '"></audio><span class="small muted">jw.org · தமிழ் ஆடியோ பைபிள்</span></div>');
+      });
     });
   }
 })();

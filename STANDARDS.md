@@ -119,3 +119,12 @@ STANDARDS.md               ← this file
 ```
 
 Book slugs: English lowercase (`galatians`). Chapter files: `1.html`, `2.html`, …
+
+
+## 4. Build & maintenance commands
+- `python3 tools/build_verses.py` — Tamil verse text for every reference (data/verses-ta.json).
+- `python3 tools/build_verses.py en` — English NWT for the optional comparison (data/verses-en.json).
+- `python3 tools/build_search.py` — rebuild data/search.json after any page change.
+- `python3 tools/check_updates.py 48 1 6` — list jw.org publications citing the chapters that we don't use yet (writes research/updates-DATE.md). Also skim the latest Watchtower study editions, since the index lags.
+- Audio links live in data/audio.json (from jw.org's media API, `pub=nwt&langwritten=TL&booknum=N`).
+- Reading position/progress is stored only in the browser (localStorage) — convenience only; nothing important is kept there.
