@@ -169,10 +169,45 @@
     if (data.sources) render(); else getJSON('sources.json').then(function (d) { data.sources = d; render(); });
   }
 
+  // full-screen image viewer: double-tap / pinch to zoom, drag to pan, swipe down or × to close
   function showImage(img) {
     var fig = img.closest('figure'), cap = fig && fig.querySelector('figcaption');
-    open(icon('image') + '<span>' + esc(img.alt || 'படம்') + '</span>',
-      '<img src="' + img.currentSrc + '" alt="' + esc(img.alt) + '">' + (cap ? '<div class="cap">' + cap.innerHTML + '</div>' : ''), '', 'viewer');
+    var v = document.createElement('div');
+    v.className = 'iv';
+    v.innerHTML = '<button class="iv-close" aria-label="மூடு">' + icon('x') + '</button>' +
+      '<div class="iv-stage"><img src="' + img.currentSrc + '" alt="' + esc(img.alt) + '"></div>' +
+      (cap ? '<div class="iv-cap">' + cap.innerHTML + '</div>' : '');
+    document.body.appendChild(v); document.body.classList.add('noscroll');
+    var stage = v.querySelector('.iv-stage'), pic = stage.querySelector('img'), capEl = v.querySelector('.iv-cap');
+    var zoomed = false, lastTap = 0, startY = null;
+    function done() { v.remove(); document.body.classList.remove('noscroll'); document.removeEventListener('keydown', onKey); }
+    function onKey(e) { if (e.key === 'Escape') done(); }
+    function zoom(on, cx, cy) {
+      zoomed = on; v.classList.toggle('zoomed', on);
+      if (on) {
+        var r = pic.getBoundingClientRect(), fx = (cx - r.left) / r.width, fy = (cy - r.top) / r.height;
+        requestAnimationFrame(function () { stage.scrollLeft = fx * stage.scrollWidth - stage.clientWidth / 2; stage.scrollTop = fy * stage.scrollHeight - stage.clientHeight / 2; });
+      }
+    }
+    document.addEventListener('keydown', onKey);
+    v.querySelector('.iv-close').addEventListener('click', done);
+    if (capEl) capEl.addEventListener('click', function (e) { if (!e.target.closest('a')) capEl.classList.toggle('open'); });
+    pic.addEventListener('dblclick', function (e) { zoom(!zoomed, e.clientX, e.clientY); });
+    pic.addEventListener('touchend', function (e) {
+      var now = Date.now();
+      if (now - lastTap < 300 && e.changedTouches[0]) { e.preventDefault(); zoom(!zoomed, e.changedTouches[0].clientX, e.changedTouches[0].clientY); lastTap = 0; }
+      else lastTap = now;
+    });
+    stage.addEventListener('click', function (e) { if (e.target === stage && !zoomed) done(); });
+    stage.addEventListener('touchstart', function (e) { startY = !zoomed && e.touches.length === 1 ? e.touches[0].clientY : null; }, { passive: true });
+    stage.addEventListener('touchmove', function (e) {
+      if (startY === null) return; var dy = e.touches[0].clientY - startY;
+      if (dy > 0) { pic.style.transform = 'translateY(' + dy + 'px)'; v.style.background = 'rgba(0,0,0,' + Math.max(0.4, 0.94 - dy / 600) + ')'; }
+    }, { passive: true });
+    stage.addEventListener('touchend', function (e) {
+      if (startY === null) return; var dy = (e.changedTouches[0] || {}).clientY - startY; startY = null;
+      if (dy > 110) done(); else { pic.style.transform = ''; v.style.background = ''; }
+    });
   }
   function showPerson(key) {
     var render = function () {

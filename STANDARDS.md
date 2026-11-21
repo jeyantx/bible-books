@@ -128,3 +128,4 @@ Book slugs: English lowercase (`galatians`). Chapter files: `1.html`, `2.html`, 
 - `python3 tools/check_updates.py 48 1 6` — list jw.org publications citing the chapters that we don't use yet (writes research/updates-DATE.md). Also skim the latest Watchtower study editions, since the index lags.
 - Audio links live in data/audio.json (from jw.org's media API, `pub=nwt&langwritten=TL&booknum=N`).
 - Reading position/progress is stored only in the browser (localStorage) — convenience only; nothing important is kept there.
+- `python3 tools/stamp.py` — **run before every push** that changes style.css/app.js: adds ?v=<hash> to the links so phones load the new files instead of cached ones.

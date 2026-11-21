@@ -1,5 +1,5 @@
 // Network-first service worker: always try the latest content, fall back to the cached copy when offline.
-const CACHE = 'bible-books-v1';
+const CACHE = 'bible-books-v2';
 self.addEventListener('install', e => self.skipWaiting());
 self.addEventListener('activate', e => e.waitUntil(self.clients.claim()));
 self.addEventListener('fetch', e => {
