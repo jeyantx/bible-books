@@ -326,3 +326,8 @@ figure img,.st img{cursor:zoom-in}
 .seg[data-key="theme"]{display:grid;grid-template-columns:1fr 1fr}
 .seg[data-key="theme"] button:nth-child(2){border-right:0}
 .seg[data-key="theme"] button:nth-child(-n+2){border-bottom:1px solid var(--line)}
+/* phone: verse note as bottom sheet */
+.pop.sheet .pop-card{max-height:82vh}
+.sheet-verses{background:var(--hl);border-radius:10px;padding:2px 12px;margin:10px 0 4px}
+.pop .sheet-note{padding:0;font-size:.95em}
+.pop .sheet-note figure{margin:10px 0}

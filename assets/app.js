@@ -283,6 +283,18 @@
     }
     function focusVerse(v) {
       var d = blocks.filter(function (b) { if (!b.dataset.r) return false; var r = b.dataset.r.split('-'); return v >= +r[0] && v <= +r[1]; })[0];
+      if (window.matchMedia('(max-width:860px)').matches && body.classList.contains('show-verses')) {
+        // phone: show the note as a bottom sheet over the verses
+        var rr = d ? d.dataset.r.split('-') : [v, v];
+        highlight(+rr[0], +rr[1], false);
+        if (!d) return;
+        var vt = '';
+        for (var n = +rr[0]; n <= +rr[1]; n++) vt += '<p class="pv"><sup>' + n + '</sup>' + esc((data.verses || {})[book + ':' + ch + ':' + n] || '') + '</p>';
+        open(icon('book') + '<span>' + esc(d.querySelector('.vref').textContent + ' · ' + d.querySelector('.vtitle').textContent) + '</span>',
+          '<div class="sheet-verses">' + vt + '</div><div class="vbody sheet-note">' + d.querySelector('.vbody').innerHTML + '</div>', '', 'sheet');
+        linkRefs(popBody.querySelector('.sheet-note'), book);
+        return;
+      }
       if (window.matchMedia('(max-width:860px)').matches || !document.querySelector('.view.on[data-view="study"]')) show('study', true);
       blocks.forEach(function (b) { b.classList.remove('hl'); });
       if (d) {
