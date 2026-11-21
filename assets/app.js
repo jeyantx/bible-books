@@ -201,6 +201,8 @@
     document.addEventListener('click', function (e) { if (!panel.hidden && !panel.contains(e.target) && e.target !== btn) panel.hidden = true; });
   }
 
+  if ('serviceWorker' in navigator) { try { navigator.serviceWorker.register(BASE + 'sw.js'); } catch (e) {} }
+
   document.addEventListener('DOMContentLoaded', function () {
     // icons declared as <i data-i="name"></i>
     document.querySelectorAll('i[data-i]').forEach(function (el) { el.outerHTML = icon(el.dataset.i, el.className); });
