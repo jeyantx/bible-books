@@ -450,3 +450,6 @@ details.sec[open]>summary{border-bottom:1px solid var(--line)}
 .continue-line b{color:var(--accent);font-weight:600}
 .continue-line .i{color:var(--accent)}
 .continue-line:hover span{text-decoration:underline}
+
+.pcard{min-width:0}
+.pcard span{width:100%;line-height:1.35;overflow-wrap:anywhere;hyphens:auto}
