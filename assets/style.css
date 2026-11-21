@@ -288,3 +288,5 @@ footer{color:var(--muted);font-size:12px;border-top:1px solid var(--line);paddin
 .avatar.sm{width:28px;height:28px}
 .who-row{display:flex;align-items:center;gap:10px}
 .qa .refs{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;font-size:12.5px}
+.brand{display:flex;flex:none}
+.brand img{width:28px;height:28px;border-radius:6px}
