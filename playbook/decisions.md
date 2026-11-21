@@ -29,6 +29,7 @@ Collected from the owner's feedback while building Galatians. If something here 
 - Text size ~15.5px, Sans (Noto Sans Tamil) everywhere incl. popups — serif Tamil looked heavy. Menu (☰, top right): "பக்கத்தைப் புதுப்பி" (reload — installed apps have no pull-to-refresh) and முகப்பு, then reading settings: size, font, spacing, theme (auto/light/sepia/dark in a 2×2 grid), English verses on/off.
 - **No repeated names** (e.g. "கலாத்தியர்" twice in bar and pane). Breadcrumb shortens with width (phone: "கலாத்தியர் › 2").
 - Icons: line icons (Lucide), **no emoji**.
+- Buttons: one system — same height (34px; bar icons 36px squares), 8px corners, 13px semibold. Tool rows are a single toolbar (e.g. ஆய்வு: [விரிவாக | சுருக்கமாக] left, open-all right; icon-only on narrow phones) with any hint as a small muted line below.
 - Popups: verse popup = Tamil text (+ English if on) + "open in wol". Source chip popup = our Tamil summary + link. Images = full-screen viewer (zoom, pan, swipe down, ×), never a new tab.
 - Phone:
   - Verse tap opens a **bottom sheet** with the verses + note (not a tab switch). Every bottom sheet has a handle and **closes by dragging down**, not only ×.

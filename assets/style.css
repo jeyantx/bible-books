@@ -506,3 +506,23 @@ details.sec[open]>summary{border-bottom:1px solid var(--line)}
 .rp-act.spin .i{animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 #reader-btn{padding:6px 9px}
+
+/* ---------- consistent buttons ---------- */
+:root{--btn-h:34px}
+.icon-btn,.seg button,.more-btn,.rp-act,.btn{min-height:var(--btn-h);border-radius:8px;font:600 13px/1.2 var(--sans)}
+.bar .icon-btn{width:36px;height:36px;padding:0;justify-content:center}
+.seg{border-radius:8px}
+.seg button{padding:0 14px}
+/* study toolbar */
+.toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:2px 0 6px}
+.toolbar .brief-seg{margin:0;display:inline-flex}
+.toolbar #expand-all{margin-left:auto;padding:0 12px}
+.hint{margin:0 0 6px;font-size:12.5px;color:var(--muted)}
+.audio-btn{min-height:30px}
+
+.toolbar{flex-wrap:nowrap}
+@media (max-width:480px){
+  .toolbar #expand-all span{display:none}
+  .toolbar #expand-all{width:var(--btn-h);padding:0;justify-content:center}
+  .toolbar .seg button{padding:0 12px}
+}

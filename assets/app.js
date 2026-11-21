@@ -490,9 +490,15 @@
     });
     var studyIntro = document.querySelector('.view[data-view="study"] .intro');
     if (studyIntro) {
+      // one toolbar: [விரிவாக | சுருக்கமாக] ........ [அனைத்தையும் திற]; hint as a small line below
+      var bar = document.createElement('div'); bar.className = 'toolbar';
       var bt = document.createElement('div'); bt.className = 'seg brief-seg';
       bt.innerHTML = '<button data-b="off">விரிவாக</button><button data-b="on">சுருக்கமாக</button>';
-      studyIntro.appendChild(bt);
+      bar.appendChild(bt);
+      var exb = document.getElementById('expand-all'); if (exb) { exb.title = 'அனைத்தையும் திற / மூடு'; bar.appendChild(exb); }
+      studyIntro.parentNode.insertBefore(bar, studyIntro);
+      studyIntro.className = 'hint';
+      studyIntro.textContent = window.matchMedia('(max-width:860px)').matches ? 'வசனங்கள் பக்கத்தில் ஒரு வசனத்தைத் தொட்டால் அதன் விளக்கம் திறக்கும்.' : 'இடது பக்கத்தில் ஒரு வசனத்தைத் தொட்டால் அதன் விளக்கம் இங்கே திறக்கும்.';
       var syncBrief = function () { body.classList.toggle('brief', PREFS.brief === 'on'); bt.querySelectorAll('button').forEach(function (b) { b.classList.toggle('on', b.dataset.b === PREFS.brief); }); };
       bt.addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; PREFS.brief = b.dataset.b; save(); blocks.forEach(function (d) { d.classList.remove('full'); }); syncBrief(); });
       syncBrief();
