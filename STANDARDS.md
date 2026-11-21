@@ -44,11 +44,12 @@ Every chapter page has these sections (tabs):
 |---|---|
 | சுருக்கம் | structure bar · 5-min gist · key points |
 | கதை | the chapter itself, in order, as questions: “பவுல் சொல்வது” (simple paraphrase) + “ஏன்” (reasoning). Background (Acts, Hebrew Scriptures) only where it explains a verse. Ends with the argument as a chain. |
-| வசன ஆய்வு | verse-by-verse notes |
-| இன்னும் பெரிய விஷயங்கள் | Question-headed sections — use only the ones the chapter answers, add other important ones: யெகோவாவைப் பற்றி நான் என்ன கற்றுக்கொண்டேன்? · யெகோவாவின் பெயர் பரிசுத்தப்படுவதோடு எப்படிச் சம்பந்தப்பட்டிருக்கிறது? · பைபிளின் முக்கியச் செய்தியோடு எப்படிப் பொருந்துகிறது? (B1) · இயேசுவைப் பற்றி என்ன சொல்கிறது? · என்ன குணங்களை நான் காட்ட வேண்டும்? · என் வாழ்க்கைக்கும் நோக்கத்துக்கும் எப்படிப் பொருந்துகிறது? |
+| ஆய்வு | verse-by-verse notes |
+| பெரிய விஷயங்கள் | Question-headed sections — use only the ones the chapter answers, add other important ones: யெகோவாவைப் பற்றி நான் என்ன கற்றுக்கொண்டேன்? · யெகோவாவின் பெயர் பரிசுத்தப்படுவதோடு எப்படிச் சம்பந்தப்பட்டிருக்கிறது? · பைபிளின் முக்கியச் செய்தியோடு எப்படிப் பொருந்துகிறது? (B1) · இயேசுவைப் பற்றி என்ன சொல்கிறது? · என்ன குணங்களை நான் காட்ட வேண்டும்? · என் வாழ்க்கைக்கும் நோக்கத்துக்கும் எப்படிப் பொருந்துகிறது? |
 | பின்னணி | facts · authenticity · links to other books · sources |
-| வரைபடம் · காலம் | maps, pictures, timeline, people, Greek words |
-| பாடங்கள் · கேள்விகள் | lessons · review Q&A |
+| வரைபடம் · காலம் | maps, pictures, timeline, Greek words |
+| நபர்கள் | people & places table with icons (tap → ID card) |
+| பாடங்கள் | lessons · review Q&A |
 
 Older per-section table (kept for reference):
 

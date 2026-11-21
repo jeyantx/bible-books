@@ -163,11 +163,10 @@
   function showPerson(key) {
     var render = function () {
       var p = data.people[key]; if (!p) return;
-      var role = { good: 'உண்மையுள்ளவர்', bad: 'எதிர்த்தவர்', neutral: p.kind === 'place' ? 'இடம்' : 'நடுநிலை' }[p.role];
       var facts = p.facts.map(function (f) { return '<dt>' + esc(f[0]) + '</dt><dd>' + esc(f[1]) + '</dd>'; }).join('');
       var body = '<div class="idcard' + (p.kind === 'place' ? ' place' : '') + '" data-role="' + p.role + '">' +
         '<img src="' + BASE + 'assets/icons/' + p.img + '" alt="' + esc(p.name) + '">' +
-        '<div><span class="role ' + p.role + '">' + role + '</span><h3>' + esc(p.name) + '</h3><dl>' + facts + '</dl>' +
+        '<div><h3>' + esc(p.name) + '</h3><dl>' + facts + '</dl>' +
         '<p>' + esc(p.note) + '</p><p class="pop-note refs-line">' + esc(p.refs) + '</p></div></div>';
       open(icon(p.kind === 'place' ? 'pin' : 'user') + '<span>' + (p.kind === 'place' ? 'இடம்' : 'நபர்') + '</span>', body, '');
       linkRefs(popBody.querySelector('.refs-line'), +(document.body.dataset.book || 0));
