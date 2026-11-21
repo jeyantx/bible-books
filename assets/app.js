@@ -356,6 +356,11 @@
     var content = document.querySelector('.content'), list = document.getElementById('vlist');
     var views = document.querySelectorAll('.view'), tabs = document.querySelectorAll('.tabs button');
 
+    function pinnedTop() {
+      var head = document.querySelector('.chead');
+      if (getComputedStyle(head).display === 'contents') { var t = document.querySelector('.tabs'); return t ? t.offsetHeight : 0; }
+      return getComputedStyle(head).position === 'sticky' ? head.offsetHeight : 0;
+    }
     function show(v, keepScroll) {
       body.classList.toggle('show-verses', v === 'verses');
       tabs.forEach(function (b) { b.classList.toggle('on', b.dataset.v === v); });
@@ -399,8 +404,7 @@
         var el = document.getElementById(v + '-' + tgt);
         if (el) {
           if (el.tagName === 'DETAILS') el.open = true;
-          var head = document.querySelector('.chead'), sticky = getComputedStyle(head).position === 'sticky' ? head.offsetHeight : 0;
-          content.scrollTo({ top: el.getBoundingClientRect().top - content.getBoundingClientRect().top + content.scrollTop - sticky - 12 });
+          content.scrollTo({ top: el.getBoundingClientRect().top - content.getBoundingClientRect().top + content.scrollTop - pinnedTop() - 12 });
           el.classList.add('flash'); setTimeout(function () { el.classList.remove('flash'); }, 1600);
         }
       }, 60);
@@ -464,8 +468,7 @@
       if (d) {
         var r = d.dataset.r.split('-'); d.open = true; d.classList.add('hl'); highlight(+r[0], +r[1], false);
         setTimeout(function () {
-          var head = document.querySelector('.chead'), sticky = getComputedStyle(head).position === 'sticky' ? head.offsetHeight : 0;
-          content.scrollTo({ top: d.getBoundingClientRect().top - content.getBoundingClientRect().top + content.scrollTop - sticky - 12, behavior: 'smooth' });
+          content.scrollTo({ top: d.getBoundingClientRect().top - content.getBoundingClientRect().top + content.scrollTop - pinnedTop() - 12, behavior: 'smooth' });
         }, 30);
       } else highlight(v, v, false);
     }
@@ -514,16 +517,14 @@
           if (Date.now() < lock) { acc = 0; return; }             // ignore the jump caused by our own toggle
           acc = (acc > 0) === (dy > 0) ? acc + dy : dy;           // distance in the current direction
           var hide = body.classList.contains('chrome-hidden');
-          if (!hide && y > 120 && acc > 40) set(true, el);
-          else if (hide && (acc < -30 || y < 40)) set(false, el);
+          if (!hide && y > 120 && acc > 40) set(true);
+          else if (hide && (acc < -30 || y < 40)) set(false);
         }, { passive: true });
       }
       var lock = 0;
-      function set(on, el) {
+      function set(on) {
         lock = Date.now() + 350;
-        var before = head.offsetHeight;
-        body.classList.toggle('chrome-hidden', on);
-        if (el === content) { var d = before - head.offsetHeight; content.scrollTop -= d; }  // no jump in the text
+        body.classList.toggle('chrome-hidden', on);   // only the top bar collapses (animated); the text does not move
       }
       watch(content); watch(document.querySelector('.verses'));
     })();

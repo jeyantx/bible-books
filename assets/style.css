@@ -399,9 +399,6 @@ body.brief details.vs:not(.full) .more-btn{display:inline-block}
 @media (max-width:860px){
   .bar{transition:height .2s ease,border-color .2s;overflow:hidden}
   body.chrome-hidden .bar{height:0;border-bottom-color:transparent}
-  body.chrome-hidden .chead h1,body.chrome-hidden .chead .lead{display:none}
-  body.chrome-hidden .chead{padding-top:0}
-  body.chrome-hidden .tabs{margin-top:0}
   body.chrome-hidden .reader-panel{display:none}
 }
 
@@ -464,3 +461,13 @@ details.sec[open]>summary{border-bottom:1px solid var(--line)}
 .idcard p{margin:0 0 12px;line-height:1.75}
 .idcard .refs-line{margin:0;padding-top:2px}
 @media(max-width:600px){.idcard{grid-template-columns:1fr;gap:16px;padding:18px 4px 10px}.idcard img{width:120px;height:120px}.idcard h3{text-align:center}}
+
+/* phone: title scrolls away naturally; only the tab row stays pinned; tab row scrolls sideways only */
+.tabs{overflow-y:hidden;overscroll-behavior:contain;touch-action:pan-x}
+@media (max-width:860px){
+  .chead{display:contents}
+  .chead h1{padding:12px 16px 0;margin:0}
+  .tabs{position:sticky;top:0;z-index:5;background:var(--bg);margin:8px 0 0;padding:0 16px}
+  .pane-head{white-space:nowrap}
+  .pane-head .ph-sub{display:none}
+}
