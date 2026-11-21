@@ -453,3 +453,14 @@ details.sec[open]>summary{border-bottom:1px solid var(--line)}
 
 .pcard{min-width:0}
 .pcard span{width:100%;line-height:1.35;overflow-wrap:anywhere;hyphens:auto}
+
+.pgroup{font-size:.85em;color:var(--muted);font-weight:600;margin:4px 0 8px}
+.pgrid+.pgroup{margin-top:18px}
+/* ID card: calmer spacing */
+.idcard{grid-template-columns:140px 1fr;gap:24px;padding:22px 8px 14px;align-items:start}
+.idcard img{width:140px;height:140px}
+.idcard h3{margin:2px 0 12px;font-size:1.2em}
+.idcard dl{gap:8px 16px;margin:0 0 14px;padding-bottom:14px;border-bottom:1px solid var(--line);line-height:1.5}
+.idcard p{margin:0 0 12px;line-height:1.75}
+.idcard .refs-line{margin:0;padding-top:2px}
+@media(max-width:600px){.idcard{grid-template-columns:1fr;gap:16px;padding:18px 4px 10px}.idcard img{width:120px;height:120px}.idcard h3{text-align:center}}
