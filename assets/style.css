@@ -526,3 +526,8 @@ details.sec[open]>summary{border-bottom:1px solid var(--line)}
   .toolbar #expand-all{width:var(--btn-h);padding:0;justify-content:center}
   .toolbar .seg button{padding:0 12px}
 }
+
+/* pictures: fit the available area, never overflow or dominate */
+figure img{width:100%;height:auto;max-height:min(420px,60vh);object-fit:contain;background:var(--soft)}
+.fig-row figure img{max-height:260px}
+@media (max-width:860px){ figure img{max-height:50vh} }

@@ -77,4 +77,5 @@ Data files: `data/verses-ta.json`, `data/verses-en.json`, `data/sources.json` (s
 - Media gallery: `/en/wol/gallery/r1/lp-e/nwtsty/<book>/<ch>`; images at `/en/wol/mp/...`
 - Search: `https://wol.jw.org/en/wol/s/r1/lp-e?q=Galatians+1%3A4&p=par`
 - lfb lessons (pictures): `https://wol.jw.org/ta/wol/d/r122/lp-tl/11020160<NN>`
+- **Pictures: each /wol/mp/ image has a 60×60 thumbnail twin with a neighbouring number. Check the downloaded size first (`sips -g pixelWidth`), keep only ≥ 900px, and resize only downwards** (`sips -Z` enlarges small images — that caused a blurry picture once). Run `python3 tools/check_images.py`.
 - wol pages cannot be embedded in iframes (`X-Frame-Options: SAMEORIGIN`) — that is why popups show our own saved text/summaries.
