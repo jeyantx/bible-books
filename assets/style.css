@@ -409,3 +409,20 @@ body.brief details.vs:not(.full) .more-btn{display:inline-block}
 .crumbs .sep{margin:0 5px;color:var(--muted)}
 @media (max-width:600px){ .crumbs .c-home{display:none} }
 @media (max-width:420px){ .crumbs .c-long{display:none} .crumbs .sep{margin:0 3px} }
+
+/* book page: chapter buttons first, sections collapsed */
+.chapters-top{margin:16px 0 22px}
+.chapters-top a{width:52px;height:52px;font-size:1.1rem;background:var(--accent);color:var(--pane);border-color:var(--accent)}
+.chapters-top a:hover{filter:brightness(1.1)}
+details.sec{border-top:1px solid var(--line)}
+details.sec:last-of-type{border-bottom:1px solid var(--line)}
+details.sec>summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px}
+details.sec>summary::-webkit-details-marker{display:none}
+details.sec>summary h2{margin:14px 0;font-size:1.02em}
+details.sec>summary::after{content:"";width:8px;height:8px;border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);transform:rotate(45deg);flex:none;margin-right:6px}
+details.sec[open]>summary::after{transform:rotate(-135deg)}
+.sec-body{padding:0 0 18px}
+
+.chapters-top{display:grid;grid-template-columns:repeat(6,minmax(0,56px));gap:8px;margin:12px 0 16px}
+.chapters-top a{width:auto;height:auto;aspect-ratio:1}
+details.sec>summary h2{display:flex;align-items:center;gap:10px}
