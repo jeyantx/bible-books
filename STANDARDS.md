@@ -43,9 +43,9 @@ Every chapter page has these sections (tabs):
 | Tab | Contents |
 |---|---|
 | சுருக்கம் | structure bar · 5-min gist · key points |
-| கதை | the chapter's events as a story in question form, tied to Acts and the Hebrew Scriptures, with pictures, evidence chips and a “யோசித்துப் பாருங்கள்” question |
+| கதை | the chapter itself, in order, as questions: “பவுல் சொல்வது” (simple paraphrase) + “ஏன்” (reasoning). Background (Acts, Hebrew Scriptures) only where it explains a verse. Ends with the argument as a chain. |
 | வசன ஆய்வு | verse-by-verse notes |
-| யெகோவா | what the chapter shows about Jehovah's qualities (specific, not generic) · how it sanctifies his name · place in the Bible's message (B1) · my life & purpose |
+| இன்னும் பெரிய விஷயங்கள் | Question-headed sections — use only the ones the chapter answers, add other important ones: யெகோவாவைப் பற்றி நான் என்ன கற்றுக்கொண்டேன்? · யெகோவாவின் பெயர் பரிசுத்தப்படுவதோடு எப்படிச் சம்பந்தப்பட்டிருக்கிறது? · பைபிளின் முக்கியச் செய்தியோடு எப்படிப் பொருந்துகிறது? (B1) · இயேசுவைப் பற்றி என்ன சொல்கிறது? · என்ன குணங்களை நான் காட்ட வேண்டும்? · என் வாழ்க்கைக்கும் நோக்கத்துக்கும் எப்படிப் பொருந்துகிறது? |
 | பின்னணி | facts · authenticity · links to other books · sources |
 | வரைபடம் · காலம் | maps, pictures, timeline, people, Greek words |
 | பாடங்கள் · கேள்விகள் | lessons · review Q&A |
@@ -94,7 +94,8 @@ Older per-section table (kept for reference):
 - **Bible references** are written as plain text (`அப் 9:26`, `1:4`). `app.js` links them automatically; a bare `1:4` means the page's book (`<body data-book="48">`). Tapping one shows the Tamil NWT verse in a popup with an “open in wol” button. wol.jw.org blocks being embedded in frames, so the popup shows saved text, not the wol page.
 - **Source chips**: `<a class="src" data-src="KEY" href="URL">w07 6/15</a>`; KEY must exist in `data/sources.json` (pub, title, summary, url). Tapping shows the summary popup.
 - **Images**: saved locally in `assets/img/<book>/` (from jw.org / wol.jw.org media, e.g. lfb lessons, nwtsty media gallery), with caption and source chip.
-- **Character icons**: generated (OpenAI) in one agreed style, saved in `assets/icons/`.
+- **Character & place icons**: see `research/icon-prompts.md`. People = circle, places = square; border = role (green good, red opposer, yellow neutral). `<img class="avatar sm[ place]" data-person="KEY" data-role="...">`; KEY must exist in `data/people.json` (tap → ID card).
+- **Images** open in a popup viewer, never a new tab.
 - **Images (old rule)**: from wol.jw.org media (`/wol/mp/...`), with caption and credit. Maps we draw ourselves are labelled “simplified, not to scale”.
 - After adding a chapter, run `python3 tools/build_verses.py` to save the verse text for every new reference.
 - Accessibility: semantic headings, `<details>` for collapsibles, sufficient contrast.
