@@ -87,8 +87,10 @@ body.app{display:flex;flex-direction:column;height:100vh;height:100dvh;overflow:
 @media (max-width:860px){
   .shell{grid-template-columns:1fr}
   .verses{display:none}
-  body.show-verses .verses{display:block}
-  body.show-verses .content{display:none}
+  body.show-verses .shell{display:flex;flex-direction:column}
+  body.show-verses .verses{display:block;order:2;flex:1;min-height:0}
+  body.show-verses .content{flex:none;overflow:visible}
+  body.show-verses .content .view{display:none}
   .tabs .mob{display:inline-flex}
   .chead{padding:10px 16px 0}
   .chead h1{font-size:1.08em}
