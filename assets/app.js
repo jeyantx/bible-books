@@ -456,7 +456,9 @@
     }
     placeVerses();
     (mqPhone.addEventListener ? mqPhone.addEventListener.bind(mqPhone, 'change') : mqPhone.addListener.bind(mqPhone))(function () {
-      placeVerses(); if (!mqPhone.matches && body.classList.contains('show-verses')) show('study');
+      placeVerses();
+      var cur = (location.hash.slice(1).split('~')[0]) || views[0].dataset.view;
+      show(cur === 'verses' && !mqPhone.matches ? 'study' : cur, true);
     });
     function scroller() { return mqPhone.matches ? content : aside; }
 

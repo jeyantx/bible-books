@@ -565,3 +565,7 @@ body.has-player .update-bar{bottom:88px}
 
 /* drawers always cover the player; hide it underneath while a drawer is open */
 body.noscroll .player{visibility:hidden}
+
+/* optical alignment: Tamil glyphs sit high in their line box, so icons next to Tamil text are raised slightly */
+.icon-btn > .i,.rp-act > .i,.continue-line > .i,.tabs button > .i,.pane-head a > .i,.meta .i,.btn > .i{position:relative;top:-1.5px}
+.icon-btn > span,.rp-act > span{line-height:1}
