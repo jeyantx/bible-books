@@ -1,5 +1,7 @@
 # Bible Books Research — Standards
 
+> **Starting a new book? Read `playbook/README.md` first** — the full process, agent prompts, tools and every design decision from Galatians.
+
 This repo holds chapter-by-chapter research on Bible books, mainly in Tamil, based **only** on jw.org / wol.jw.org.
 Hosted as a static site on GitHub Pages (no build step).
 
