@@ -475,3 +475,17 @@ details.sec[open]>summary{border-bottom:1px solid var(--line)}
 .update-bar{position:fixed;left:50%;bottom:max(16px,env(safe-area-inset-bottom));transform:translateX(-50%);z-index:90;display:flex;align-items:center;gap:10px;background:var(--text);color:var(--bg);padding:8px 8px 8px 16px;border-radius:999px;box-shadow:0 8px 30px rgba(0,0,0,.25);font-size:14px;white-space:nowrap}
 .update-bar button{border:0;border-radius:999px;padding:6px 14px;background:var(--accent);color:#fff;font:600 13px var(--sans);cursor:pointer}
 .update-bar button.ghost{background:transparent;color:var(--bg);padding:6px}
+
+/* previous / next chapter */
+.chnav{display:none;gap:2px;flex:none}
+.chnav a,.chnav span{width:32px;height:32px;display:grid;place-items:center;border-radius:8px;color:var(--accent)}
+.chnav a:hover{background:var(--soft)}
+.chnav span{opacity:.25;color:var(--muted)}
+@media (max-width:860px){ .chnav{display:flex} }
+.ch-pager{display:flex;justify-content:space-between;gap:10px;margin:36px 0 8px;padding-top:16px;border-top:1px solid var(--line)}
+.ch-pager a{display:flex;align-items:center;gap:8px;padding:10px 14px;border:1px solid var(--line);border-radius:10px;background:var(--pane);text-decoration:none;color:var(--text);font-weight:600}
+.ch-pager a:hover{border-color:var(--accent)}
+.ch-pager small{display:block;font-size:11px;font-weight:600;color:var(--muted)}
+.ch-pager .next{text-align:right;margin-left:auto}
+.ch-pager .i{color:var(--accent)}
+.vpager{padding:0 20px 24px}

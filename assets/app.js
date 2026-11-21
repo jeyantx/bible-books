@@ -411,7 +411,8 @@
     function route() {
       var h = decodeURIComponent((pendingHash || location.hash).slice(1)).split('~'), v = h[0], tgt = h[1];
       pendingHash = '';
-      if (!document.querySelector('.view[data-view="' + v + '"]')) v = views[0].dataset.view;
+      if (v !== 'verses' && !document.querySelector('.view[data-view="' + v + '"]')) v = views[0].dataset.view;
+      if (v === 'verses' && !window.matchMedia('(max-width:860px)').matches) v = 'study';
       show(v);
       if (!tgt) return;
       setTimeout(function () {
@@ -521,6 +522,25 @@
       });
     }
     document.addEventListener('en-change', fillEnglish);
+
+    // previous / next chapter: buttons in the bar (phones) and at the end of every tab; they keep the current tab
+    (function () {
+      var links = [].slice.call(document.querySelectorAll('.chsel a')), cur = links.filter(function (a) { return a.classList.contains('on'); })[0];
+      if (!cur) return;
+      var i = links.indexOf(cur), prev = links[i - 1], next = links[i + 1];
+      function view() { return (location.hash.slice(1).split('~')[0]) || 'overview'; }
+      function go(a, e) { e.preventDefault(); var v = view(); location.href = a.getAttribute('href') + '#' + (v === 'verses' ? 'verses' : v); }
+      var nav = document.createElement('div'); nav.className = 'chnav';
+      nav.innerHTML = (prev ? '<a href="' + prev.getAttribute('href') + '" aria-label="முந்தைய அதிகாரம்">' + icon('chevl') + '</a>' : '<span>' + icon('chevl') + '</span>') +
+                      (next ? '<a href="' + next.getAttribute('href') + '" aria-label="அடுத்த அதிகாரம்">' + icon('chevr') + '</a>' : '<span>' + icon('chevr') + '</span>');
+      document.querySelector('.crumbs').insertAdjacentElement('afterend', nav);
+      var pager = '<nav class="ch-pager">' +
+        (prev ? '<a href="' + prev.getAttribute('href') + '">' + icon('chevl') + '<span><small>முந்தைய</small>அதிகாரம் ' + prev.textContent + '</span></a>' : '<span></span>') +
+        (next ? '<a class="next" href="' + next.getAttribute('href') + '"><span><small>அடுத்த</small>அதிகாரம் ' + next.textContent + '</span>' + icon('chevr') + '</a>' : '<span></span>') + '</nav>';
+      views.forEach(function (sec) { sec.insertAdjacentHTML('beforeend', pager); });
+      var vp = document.querySelector('.verses'); if (vp) vp.insertAdjacentHTML('beforeend', '<div class="vpager">' + pager + '</div>');
+      document.addEventListener('click', function (e) { var a = e.target.closest('.chnav a, .ch-pager a, .chsel a'); if (a) go(a, e); });
+    })();
 
     // phone: the chapter title shrinks and fades continuously as the reader scrolls (verses or notes); the top bar always stays
     (function () {

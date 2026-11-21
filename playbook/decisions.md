@@ -35,6 +35,7 @@ Collected from the owner's feedback while building Galatians. If something here 
   - Tabs must always stay reachable; tab row scrolls **sideways only** (no vertical drag).
   - The **top bar always stays** (owner did not want it hidden). The chapter **title shrinks and fades continuously with the scroll** (slow, scroll-linked — a sudden hide looked like a jerk); in the verse list it collapses over ~1.6× its height; in other tabs it scrolls away with the text. Only the tab row stays pinned.
   - Anything absolutely positioned must not live inside the bar (the bar clips when hiding) — e.g. the Aa panel is attached to `<body>`.
+- Chapter pages: previous/next chapter — ‹ › in the bar on phones, and a pager at the end of every tab and of the verse list; navigation keeps the current tab.
 - Book page: **chapter number buttons right under the title**; "continue reading" as one quiet line (home page keeps the card); every other section **collapsed by default** as cards (people come back for verses, not descriptions).
 - Home card: just number + name (no "அதிகாரங்கள் 1–6 தயார்").
 - Installable app (manifest + service worker, network-first so it auto-updates). Always `tools/stamp.py` before pushing — it versions CSS/JS links (phones showed stale CSS otherwise) and writes the build id used by the "புதிய பதிப்பு உள்ளது — புதுப்பி" bar.
