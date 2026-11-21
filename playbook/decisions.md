@@ -42,6 +42,8 @@ Collected from the owner's feedback while building Galatians. If something here 
 - Home card: just number + name (no "அதிகாரங்கள் 1–6 தயார்").
 - Installable app (manifest + service worker, network-first so it auto-updates). Always `tools/stamp.py` before pushing — it versions CSS/JS links (phones showed stale CSS otherwise) and writes the build id used by the "புதிய பதிப்பு உள்ளது — புதுப்பி" bar.
 
+- Audio: one custom bottom player bar (not the browser's default) — round play/pause, title + time, draggable progress, ±10 s, speed 1/1.25/1.5/0.75×, close. Keeps playing across tabs; full-width at the bottom on phones. The book page list plays into the same bar.
+
 ## Icons & pictures
 - People: engraved/woodcut two-tone (ink + one muted accent per person), **circle**. Places: soft watercolour, **square**. Prompts in `research/icon-prompts.md`.
 - Border = role: light green good, red opposer, yellow neutral. No role label text on the ID card (border is enough).

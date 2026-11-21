@@ -42,6 +42,9 @@
     menu: '<path d="M4 6h16M4 12h16M4 18h16"/>',
     reload: '<path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/>',
     home: '<path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/>',
+    pause: '<path d="M7 4h3v16H7zM14 4h3v16h-3z"/>',
+    back10: '<path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/><text x="12" y="15.5" text-anchor="middle" font-size="7" font-weight="700" fill="currentColor" stroke="none">10</text>',
+    fwd10: '<path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/><text x="12" y="15.5" text-anchor="middle" font-size="7" font-weight="700" fill="currentColor" stroke="none">10</text>',
     search: '<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>',
     play: '<path d="M6 4v16l14-8z"/>',
     headphones: '<path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/>',
@@ -376,14 +379,53 @@
     box.hidden = false;
   }
 
-  // ---------- audio (jw.org Tamil audio Bible) ----------
+  // ---------- audio player (jw.org Tamil audio Bible): one bottom bar, keeps playing across tabs ----------
+  var player;
+  function fmt(t) { t = Math.max(0, Math.floor(t || 0)); return Math.floor(t / 60) + ':' + ('0' + t % 60).slice(-2); }
+  function playAudio(url, title) {
+    if (!player) {
+      player = document.createElement('div'); player.className = 'player';
+      player.innerHTML = '<audio preload="metadata"></audio>' +
+        '<button class="pl-play" aria-label="இயக்கு">' + icon('play') + '</button>' +
+        '<div class="pl-mid"><div class="pl-top"><span class="pl-title"></span><span class="pl-time">0:00 / 0:00</span></div>' +
+        '<input class="pl-seek" type="range" min="0" max="1000" value="0" aria-label="நிலை"></div>' +
+        '<button class="pl-btn pl-back" aria-label="10 விநாடி பின்">' + icon('back10') + '</button>' +
+        '<button class="pl-btn pl-fwd" aria-label="10 விநாடி முன்">' + icon('fwd10') + '</button>' +
+        '<button class="pl-btn pl-speed" aria-label="வேகம்">1×</button>' +
+        '<button class="pl-btn pl-close" aria-label="மூடு">' + icon('x') + '</button>';
+      document.body.appendChild(player);
+      var au = player.querySelector('audio'), seek = player.querySelector('.pl-seek'), pb = player.querySelector('.pl-play'), tm = player.querySelector('.pl-time');
+      var speeds = [1, 1.25, 1.5, 0.75], si = 0, dragging = false;
+      function paint() {
+        pb.innerHTML = icon(au.paused ? 'play' : 'pause'); pb.setAttribute('aria-label', au.paused ? 'இயக்கு' : 'நிறுத்து');
+        tm.textContent = fmt(au.currentTime) + ' / ' + fmt(au.duration);
+        if (!dragging && au.duration) { seek.value = Math.round(au.currentTime / au.duration * 1000); }
+        seek.style.setProperty('--p', (seek.value / 10) + '%');
+      }
+      ['play', 'pause', 'timeupdate', 'loadedmetadata', 'ended'].forEach(function (ev) { au.addEventListener(ev, paint); });
+      pb.addEventListener('click', function () { au.paused ? au.play() : au.pause(); });
+      seek.addEventListener('input', function () { dragging = true; seek.style.setProperty('--p', (seek.value / 10) + '%'); if (au.duration) tm.textContent = fmt(seek.value / 1000 * au.duration) + ' / ' + fmt(au.duration); });
+      seek.addEventListener('change', function () { dragging = false; if (au.duration) au.currentTime = seek.value / 1000 * au.duration; });
+      player.querySelector('.pl-back').addEventListener('click', function () { au.currentTime = Math.max(0, au.currentTime - 10); });
+      player.querySelector('.pl-fwd').addEventListener('click', function () { au.currentTime = Math.min(au.duration || 0, au.currentTime + 10); });
+      player.querySelector('.pl-speed').addEventListener('click', function (e) { si = (si + 1) % speeds.length; au.playbackRate = speeds[si]; e.currentTarget.textContent = speeds[si] + '×'; });
+      player.querySelector('.pl-close').addEventListener('click', function () { au.pause(); player.hidden = true; document.body.classList.remove('has-player'); });
+    }
+    var au2 = player.querySelector('audio');
+    if (au2.getAttribute('src') !== url) { au2.src = url; }
+    player.querySelector('.pl-title').textContent = title;
+    player.hidden = false; document.body.classList.add('has-player');
+    au2.play().catch(function () {});
+  }
+  window.bbPlay = playAudio;
   function renderAudioList() {
     var box = document.getElementById('audio-list'); if (!box) return;
-    var book = document.body.dataset.book;
+    var book = document.body.dataset.book, name = (document.querySelector('h1') || {}).textContent || '';
     getJSON('audio.json').then(function (a) {
       var html = '';
-      for (var c = 1; a[book + ':' + c]; c++) html += '<div class="audio-row"><span>அதிகாரம் ' + c + '</span><audio controls preload="none" src="' + a[book + ':' + c] + '"></audio></div>';
+      for (var c = 1; a[book + ':' + c]; c++) html += '<button class="audio-row" data-url="' + a[book + ':' + c] + '" data-title="' + esc(name + ' ' + c) + '">' + icon('play') + '<span>அதிகாரம் ' + c + '</span></button>';
       box.innerHTML = html;
+      box.addEventListener('click', function (e) { var r = e.target.closest('.audio-row'); if (r) playAudio(r.dataset.url, r.dataset.title); });
     });
   }
 
@@ -594,11 +636,7 @@
       var url = a[book + ':' + ch], head = document.querySelector('.pane-head'); if (!url || !head) return;
       var btn = document.createElement('button'); btn.className = 'icon-btn ghost audio-btn'; btn.innerHTML = icon('headphones') + '<span>கேள்</span>';
       head.insertBefore(btn, head.querySelector('a'));
-      btn.addEventListener('click', function () {
-        var bar = document.querySelector('.audio-bar');
-        if (bar) { bar.remove(); return; }
-        head.insertAdjacentHTML('afterend', '<div class="audio-bar"><audio controls autoplay preload="none" src="' + url + '"></audio><span class="small muted">jw.org · தமிழ் ஆடியோ பைபிள்</span></div>');
-      });
+      btn.addEventListener('click', function () { playAudio(url, bookName + ' ' + ch); });
     });
   }
 })();
